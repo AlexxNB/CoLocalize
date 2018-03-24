@@ -1,10 +1,10 @@
 <?php
 /*
-    MySQL access settings
+    MySQL settings
 */
 
 
 $host =     'localhost';                // Host
-$user=      'mylocalize';               // Database user
-$password=  'mylocalize';               // User's password
-$database=  'mylocalize';               // Database name
+$user=      'CoLocalize_DB_User';       // Database user
+$password=  'very_secret_password';     // User's password
+$database=  'colocalize';               // Database name
