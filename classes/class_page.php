@@ -1,5 +1,6 @@
 <?php
 require_once("class_utils.php");
+require_once("class_language.php");
 
 class Page {
     private $_ver;
@@ -10,6 +11,7 @@ class Page {
     private $_jslink;
     private $_csslink;
     private $_pageview;
+    public $L;
 
     public function __construct(){
         $this->_ver = 1;
@@ -24,7 +26,18 @@ class Page {
              $this->_vars[$key]=$value;
              $this->_clearVar($key);
         }
+
         $this->_preProc();
+
+        $utils = new Utils();
+        $lang = new Language();
+
+        if($utils->isGlobal('lang'))
+            $l = $utils->getGlobal('lang');
+        else    
+            $l = 'en';
+
+        $this->L = $lang->GetLangVars($l);
     }
 
     public function View($tpl){

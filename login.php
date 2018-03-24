@@ -13,11 +13,10 @@ if($page->GetURL(2)=='logout'){
 $page->AddJSLink('/template/js/login.js');
 
 
-$page->Title = 'Вход в систему!';
-$page->OneColumn = true;
+$page->Title = $page->L['login:title'];
 
-$loginForm = $page->View('login_form');
+//$loginForm = $page->View('login_form');
 
 
-$page->Content = $loginForm->HTML();
+//$page->Content = $loginForm->HTML();
 $page->makePage();

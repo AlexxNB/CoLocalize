@@ -18,9 +18,6 @@ function preProc(){
     //Default variables
     $result['vars']['Ver'] = 1;
 
-
-
-
     return $result;
 }
 ?>

@@ -1,3 +1,6 @@
 {
-    "appname": "MyLacalize"
+    "appname": "CoLocalize",
+    "login": {
+        "title":"Sign In or Sign Up"
+    }
 }

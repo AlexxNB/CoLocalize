@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-require_once("class_litedb.php");
+require_once("class_db.php");
 require_once("class_utils.php");
 //require_once("class_mail.php");
 class Auth
@@ -20,7 +20,7 @@ class Auth
   }
 
   public function Login($user,$password,$remember=true){
-    $db = new LiteDB();
+    $db = new DB();
     if(!$this->_isValid($user,$password)) return false;
     $admin = $db->selectRow("users","user='$user'");
 
@@ -47,7 +47,7 @@ class Auth
   }
 
   private function _isValidSession(){
-    $db = new LiteDB();
+    $db = new DB();
     $user = $db->selectRow('users','id='.$_SESSION['userid']);
     $db->close();
     $secure =  $this->makeSecure($user['id'],$user['user'],$user['password']);
@@ -56,7 +56,7 @@ class Auth
   }
 
   private function _isValid($user,$password){
-    $db = new LiteDB();
+    $db = new DB();
     if(!$admin = $db->selectRow("users","user='$user'")) return false;
     if(md5($password) != $admin['password']) return false;
 
@@ -69,7 +69,7 @@ class Auth
   }
 
   public function IsUser($user){
-     $db = new LiteDB();
+     $db = new DB();
      $user = $db->selectRow("users","user='$user'");
        if($user)
          return true;
@@ -86,7 +86,7 @@ class Auth
   }
 
   public function GetUser(){
-    $db = new LiteDB();
+    $db = new DB();
     $utils = new Utils();
 
     if($utils->isGlobal('auth_user')) return $utils->getGlobal('auth_user');
@@ -98,7 +98,7 @@ class Auth
   }
 
   public function GetUserById($userid){
-    $db = new LiteDB();
+    $db = new DB();
     $utils = new Utils();
     if($utils->isGlobal('auth_user_'.$userid)) return $utils->getGlobal('auth_user_'.$userid);
     $user =  $db->selectRow('users','id='.$userid);
@@ -127,7 +127,7 @@ class Auth
     if(!$user = $this->GetUserById($userid)) return false;
     if(in_array($priv,$user['privs'])) return false;
     $user['privs'][]=$priv;
-    $db = new LiteDB();
+    $db = new DB();
     $db->Update('users', array('privs'=>json_encode($user['privs'])), "id=$userid");
   }
 
@@ -135,7 +135,7 @@ class Auth
     if(!$user = $this->GetUserById($userid)) return false;
     if(!in_array($priv,$user['privs'])) return false;
     unset($user['privs'][array_search($priv,$user['privs'])]);
-    $db = new LiteDB();
+    $db = new DB();
     $db->Update('users', array('privs'=>json_encode($user['privs'])), "id=$userid");
   }
 

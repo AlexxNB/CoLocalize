@@ -1,7 +1,6 @@
 <?php
 
-class MyDB
-{
+class DB{
     const DEBUG = true;
 
     private $_host;
@@ -9,11 +8,9 @@ class MyDB
     private $_password;
     private $_database;
     private $_port;
-
     private $_result;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->_loadConfig();
         $pdo_mysql = 'mysql:host='. $this->_host .';dbname='. $this->_database .';port='. $this->_port;
 
@@ -34,8 +31,7 @@ class MyDB
         }
     }
 
-    public function insert($table, $cols)
-    {
+    public function insert($table, $cols){
         $c = '';
         $v = '';
         if(is_array($cols))
@@ -56,16 +52,14 @@ class MyDB
         }
     }
 
-    public function delete($table, $where='')
-    {
+    public function delete($table, $where=''){
         $query = "DELETE FROM $table";
         if(!empty($where)) $query .= " WHERE $where";
 
         $this->_execute($query);
     }
 
-    public function update($table, $cols, $where='')
-    {
+    public function update($table, $cols, $where=''){
         $c = '';
         if(is_array($cols))
         {
@@ -85,13 +79,11 @@ class MyDB
         else return false;
     }
 
-    public function lastID()
-    {
+    public function lastID(){
         return $GLOBALS['DBConnected']->lastInsertId();
     }
 
-    public function selectCell($table, $cell, $where='', $order='')
-    {
+    public function selectCell($table, $cell, $where='', $order=''){
         $this->select($table, $where, $order, $cell);
 
         if($this->_emptyResult())
@@ -101,8 +93,7 @@ class MyDB
         return $c[$cell];
     }
 
-    public function selectRow($table, $where='')
-    {
+    public function selectRow($table, $where=''){
         $this->select($table, $where);
 
         if($this->_emptyResult())
@@ -111,13 +102,11 @@ class MyDB
             return $this->_fetch();
     }
 
-    public function numRows()
-    {
+    public function numRows(){
         return $this->_numRows();
     }
 
-    public function selectInArray($table, $where='', $order='', $cols='*')
-    {
+    public function selectInArray($table, $where='', $order='', $cols='*'){
         $this->select($table, $where, $order, $cols);
 
         if($this->_emptyResult())
@@ -134,8 +123,7 @@ class MyDB
         }
     }
 
-    public function select($table, $where='', $order='', $cols='*')
-    {
+    public function select($table, $where='', $order='', $cols='*'){
         if(is_array($cols))
         {
             $c = '';
@@ -156,8 +144,7 @@ class MyDB
         $this->query($query);
     }
 
-    public function fetchInArray()
-    {
+    public function fetchInArray(){
         if($this->_emptyResult())
             return false;
         else
@@ -172,29 +159,24 @@ class MyDB
         }
     }
 
-    public function query($query)
-    {
+    public function query($query){
         $this->_result = $this->_execute($query);
     }
 
-    private function _fetch()
-    {
+    private function _fetch(){
         return $this->_result->fetch();
     }
 
-    private function _numRows()
-    {
+    private function _numRows(){
         return $this->_result->rowCount();
     }
 
-    private function _emptyResult()
-    {
+    private function _emptyResult(){
         if($this->_numRows() == 0) return true;
         else return false;
     }
 
-    private function _execute($query)
-    {
+    private function _execute($query){
         $result = '';
 
         try {
@@ -206,9 +188,8 @@ class MyDB
         return $result;
     }
 
-    private function _loadConfig()
-    {
-        require(dirname(__FILE__)."/../config.php");
+    private function _loadConfig(){
+        require(dirname(__FILE__)."/../_config.php");
         $this->_host = $server;
         $this->_user = $user;
         $this->_password = $password;
@@ -216,8 +197,7 @@ class MyDB
         $this->_port = $port;
     }
 
-    private function _printError($error, $query = '')
-    {
+    private function _printError($error, $query = ''){
         if(self::DEBUG)
         {
             echo '<div style="position:absolute; width:100%; top:0px; left:0px; background-color:black; color:#33CC00; font-family:courier; font-size:12px; border: 2px solid #33CC00">';
@@ -226,8 +206,7 @@ class MyDB
         }
     }
 
-    public function close()
-    {
+    public function close(){
         $GLOBALS['DBConnected'] = null;
     }
 }
