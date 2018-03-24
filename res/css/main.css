@@ -7,3 +7,27 @@ html{
 body{
     margin:0
 }
+
+#wrapper{
+  display:grid;
+  grid-template-columns: 1fr 900px 1fr;
+  grid-template-rows: 50px 1fr 50px;
+  grid-template-areas: 
+    "nav nav nav"
+    ". content ."
+    "footer footer footer";
+    min-height: 100vh;
+}
+
+#nav{
+    grid-area: nav;
+    background-color: brown;
+}
+
+#content{
+    grid-area: content;
+}
+
+#footer{
+    grid-area: footer;
+}

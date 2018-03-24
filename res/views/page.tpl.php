@@ -8,7 +8,11 @@
 	</head>
 	<?=$JSLinks?>
 	<body>
-		<?=$Content?>
+		<div id="wrapper">
+			<div id="nav"></div>
+			<div id="content"><?=$Content?></div>
+			<div id="footer"></div>
+		</div>
 	</body>
 	<?=$JSCode?>
 </html>
