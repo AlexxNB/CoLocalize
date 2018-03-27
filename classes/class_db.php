@@ -20,7 +20,7 @@ class DB{
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
-           //     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             ];
 
             try {
@@ -31,7 +31,7 @@ class DB{
         }
     }
 
-    public function insert($table, $cols){
+    public function Insert($table, $cols){
         $c = '';
         $v = '';
         if(is_array($cols))
@@ -48,18 +48,18 @@ class DB{
             $query = "INSERT INTO $table ($c) VALUES ($v)";
 
             $this->_execute($query);
-            return $this->lastID();
+            return $this->_lastID();
         }
     }
 
-    public function delete($table, $where=''){
+    public function Delete($table, $where=''){
         $query = "DELETE FROM $table";
         if(!empty($where)) $query .= " WHERE $where";
 
         $this->_execute($query);
     }
 
-    public function update($table, $cols, $where=''){
+    public function Update($table, $cols, $where=''){
         $c = '';
         if(is_array($cols))
         {
@@ -79,12 +79,12 @@ class DB{
         else return false;
     }
 
-    public function lastID(){
+    public function _lastID(){
         return $GLOBALS['DBConnected']->lastInsertId();
     }
 
-    public function selectCell($table, $cell, $where='', $order=''){
-        $this->select($table, $where, $order, $cell);
+    public function SelectCell($table, $cell, $where='', $order=''){
+        $this->Select($table, $where, $order, $cell);
 
         if($this->_emptyResult())
             return false;
@@ -93,8 +93,8 @@ class DB{
         return $c[$cell];
     }
 
-    public function selectRow($table, $where=''){
-        $this->select($table, $where);
+    public function SelectRow($table, $where=''){
+        $this->Select($table, $where);
 
         if($this->_emptyResult())
             return false;
@@ -102,12 +102,12 @@ class DB{
             return $this->_fetch();
     }
 
-    public function numRows(){
+    public function NumRows(){
         return $this->_numRows();
     }
 
-    public function selectInArray($table, $where='', $order='', $cols='*'){
-        $this->select($table, $where, $order, $cols);
+    public function SelectInArray($table, $where='', $order='', $cols='*'){
+        $this->Select($table, $where, $order, $cols);
 
         if($this->_emptyResult())
             return false;
@@ -123,7 +123,7 @@ class DB{
         }
     }
 
-    public function select($table, $where='', $order='', $cols='*'){
+    public function Select($table, $where='', $order='', $cols='*'){
         if(is_array($cols))
         {
             $c = '';
@@ -141,10 +141,10 @@ class DB{
         if(!empty($where)) $query .= " WHERE $where";
         if(!empty($order)) $query .= " ORDER BY $order";
 
-        $this->query($query);
+        $this->Query($query);
     }
 
-    public function fetchInArray(){
+    public function FetchInArray(){
         if($this->_emptyResult())
             return false;
         else
@@ -159,7 +159,7 @@ class DB{
         }
     }
 
-    public function query($query){
+    public function Query($query){
         $this->_result = $this->_execute($query);
     }
 
@@ -198,12 +198,12 @@ class DB{
     }
 
     private function _printError($error, $query = ''){
-        if(self::DEBUG)
-        {
-            echo '<div style="position:absolute; width:100%; top:0px; left:0px; background-color:black; color:#33CC00; font-family:courier; font-size:12px; border: 2px solid #33CC00">';
-            if ($query) echo '<b>Обнаружена ошибка в SQL запросе:</b><br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $query, '<br />&nbsp;<br />';
-            echo $error, '</div>';
+        if(self::DEBUG){
+            echo $error;
+        }else{
+            header("HTTP/1.0 500 Internal Server Error");
         }
+        exit();
     }
 
     public function close(){

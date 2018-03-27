@@ -1,6 +1,37 @@
 {
-    "appname": "CoLocalizer",
+    "appname": "CoLocalize",
     "login": {
-        "title":"Sign In or Sign Up"
-    }
+        "title":"Sign In or Sign Up",
+        "signin":{
+            "title":"Sign In",
+            "form":{
+                "email":"E-Mail",
+                "password":"Password",
+                "remember": "Remember me",
+                "button": "Sign IN"
+            }
+        },
+        "signup":{
+            "title":"Sign Up",
+            "form":{
+                "fullname":"Full Name",
+                "email":"E-Mail",
+                "password":"Create password",
+                "password2":"Confirm password",
+                "button": "Sign UP"
+            },
+            "msg":{
+                "empty_name":"Please enter your name",
+                "empty_email":"Please enter your E-Mail",
+                "empty_password":"Please enter your new password",
+                "empty_password2":"Please enter password one more time",
+                "name_too_short":"Please enter your real name",
+                "email_fail":"Please enter your real E-Mail",
+                "email_exists":"This E-Mail is already registered",
+                "password_mismatch":"Passwords doesn't match each other"
+            }
+        },
+        "or":"OR"
+    },
+    "system_error":"System Error"
 }

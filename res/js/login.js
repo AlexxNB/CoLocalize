@@ -1,13 +1,39 @@
 $(document).ready(function() {
-	
-	$('#DoLogin').click(function(){
-		doLogin();
+	$('#doSignIn').click(function(){
+		doSignIn();
+	});
+
+	$('#doSignUp').click(function(){
+		doSignUp();
 	});
 	
-	bindEnterKey('#User,#Password','#DoLogin');
-
+	bindEnterKey('#email,#password','#doSignIn');
+	bindEnterKey('#rName,#rEmail,#rPassword,#rPassword2','#doSignUp');
 });
 
+function doSignUp(){
+	var name = $('#rName').val();
+	var email = $('#rEmail').val();
+	var password = $('#rPassword').val();
+	var password2 = $('#rPassword').val();
+
+	startLoading('#doSignUp');
+	disable('#doSignIn');
+	clearInpError();
+
+	getJSON('login','signup',{name:name, email:email, password:password, password2:password2},function(data) {
+		if(data.status != 200){
+			if(data.data == 'name') setInpError('#rName',data.error);
+			if(data.data == 'email') setInpError('#rEmail',data.error);
+			if(data.data == 'password') setInpError('#rPassword',data.error);
+			if(data.data == 'password2') setInpError('#rPassword2',data.error);
+			stopLoading('#doSignUp');
+			enable('#doSignIn');
+			return false;
+		}
+		document.location.href = '/';		
+	});
+}
 
 function doLogin(){
 	var user = $('#User').val();

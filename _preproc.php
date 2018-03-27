@@ -9,7 +9,7 @@ function preProc(){
 
 
     //Default CSS files
-      $result['css'][] = '/res/css/main.css';
+      $result['css'][] = '/res/css/colocolize.css';
 
     //Default JS files
       $result['js'][] = '/res/js/jquery.min.js';

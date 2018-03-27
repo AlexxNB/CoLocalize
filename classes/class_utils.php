@@ -1,21 +1,21 @@
 <?php
 class Utils{
 
-  public function setGlobal($name,$value){
+  public function SetGlobal($name,$value){
     $GLOBALS['myglobals'][$name] = $value;
     return $value;
   }
 
-  public function isGlobal($name){
+  public function IsGlobal($name){
     return isset($GLOBALS['myglobals'][$name]);
   }
 
-  public function getGlobal($name){
+  public function GetGlobal($name){
     if(!$this->isGlobal($name)) return false;
     return $GLOBALS['myglobals'][$name];
   }
 
-  public function unsetGlobal($name){
+  public function UnsetGlobal($name){
       unset($GLOBALS['myglobals'][$name]);
   }
 }

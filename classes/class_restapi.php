@@ -50,7 +50,7 @@ class Restapi
 		$ar['error'] = $msg;
 		$ar['status'] = 400;
 		if($data) $ar['data'] = $data;
-		echo json_encode($ar);
+		echo json_encode($ar,JSON_UNESCAPED_UNICODE);
 		exit();
 	}
 	
@@ -59,7 +59,7 @@ class Restapi
 		$ar['error'] = $msg;
 		$ar['status'] = 500;
 		if($data) $ar['data'] = $data;
-		echo json_encode($ar);
+		echo json_encode($ar,JSON_UNESCAPED_UNICODE);
 		exit();
 	}
 	

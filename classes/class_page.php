@@ -41,7 +41,9 @@ class Page {
     }
 
     public function View($tpl){
-        return new View($tpl);
+        $v = new View($tpl);
+        $v->L = $this->L;
+        return $v;
     }
 
     public function __set($key, $value)

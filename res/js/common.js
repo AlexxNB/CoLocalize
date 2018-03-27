@@ -13,7 +13,7 @@ $(document).ready(function() {
 });
 
 function getJSON(group,command,data,func){
-    $.getJSON('/ajax/'+group+'/'+command+'/',data)
+    $.getJSON('/api/'+group+'/'+command+'/',data)
         .done(func)
         .fail(function( jqxhr, textStatus, error ) {
             console.log( "Request Failed: " + err );
@@ -59,22 +59,4 @@ function disable($id){
 
 function enable($id){
     $($id).removeAttr('disabled');
-}
-
-var sock = null;
-function startWS(onOpen,onMessage){
-    var wsuri = "ws://185.125.218.27:8080";
-    sock = new WebSocket(wsuri);
-    sock.onopen = function() {onOpen()}
-    sock.onclose = function(e) {}
-    sock.onmessage = function(e) {
-        var json = JSON.parse(e.data);
-        onMessage(json.command,json.data);
-    }   
-}
-
-function wsSendCommand(command,data) {
-    if (sock == null) return false;
-    var cmd = {command:command,data:data}
-    sock.send(JSON.stringify(cmd));
 }
