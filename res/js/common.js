@@ -38,25 +38,29 @@ function bindEnterKey($keypressed,$to_click){
     });
 }
 
-function exists($id){
-    if($($id).length > 0)
+function exists(id){
+    if($(id).length > 0)
         return true;
     else
         return false;
 }
 
-function startLoading($id){
-    $($id).addClass('loading');
+function startLoading(id){
+    $(id).addClass('loading');
 }
 
-function stopLoading($id){
-    $($id).removeClass('loading');
+function stopLoading(id){
+    $(id).removeClass('loading');
 }
 
-function disable($id){
-    $($id).attr('disabled','disabled');
+function disable(id){
+    $(id).attr('disabled','disabled');
 }
 
-function enable($id){
-    $($id).removeAttr('disabled');
+function enable(id){
+    $(id).removeAttr('disabled');
+}
+
+function locate(url){
+    document.location.href = url;	
 }

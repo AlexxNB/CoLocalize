@@ -1,4 +1,6 @@
 <?php
+require_once("classes/class_auth.php");
+
 function preProc(){
     $result = array('vars'=>array(),'css'=>array(),'js'=>array());
 
@@ -17,7 +19,13 @@ function preProc(){
 
     //Default variables
     $result['vars']['Ver'] = 1;
+    $result['vars']['User'] = makeUser();
 
     return $result;
+}
+
+function makeUser(){
+  $auth = new Auth();
+  return $auth->GetUser();
 }
 ?>

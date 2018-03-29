@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label class="form-switch">
-                    <input type="checkbox">
+                    <input type="checkbox" id="remember">
                     <i class="form-icon"></i> <?=$L['login:signin:form:remember']?>
                 </label>
             </div>

@@ -15,6 +15,18 @@ class Page {
 
     public function __construct(){
         $this->_ver = 1;
+
+        $utils = new Utils();
+        $lang = new Language();
+
+        if($utils->isGlobal('lang'))
+            $l = $utils->getGlobal('lang');
+        else    
+            $l = 'en';
+
+        $this->L = $lang->GetLangVars($l);
+
+        
         $this->_pageview = $this->View('page');
         foreach($_GET as $key=>$value)
         {
@@ -29,15 +41,7 @@ class Page {
 
         $this->_preProc();
 
-        $utils = new Utils();
-        $lang = new Language();
-
-        if($utils->isGlobal('lang'))
-            $l = $utils->getGlobal('lang');
-        else    
-            $l = 'en';
-
-        $this->L = $lang->GetLangVars($l);
+        
     }
 
     public function View($tpl){
@@ -52,6 +56,7 @@ class Page {
     }
 
     public function MakePage(){
+        $auth = new Auth();
 
         $this->_pageview->Title = $this->Title;
         $this->_pageview->Content = $this->Content;

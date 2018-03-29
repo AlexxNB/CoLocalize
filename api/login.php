@@ -34,16 +34,16 @@ if($api->getCommand() == 'signup'){
 }
 
 // Авторизация пользователя
-if($api->getCommand() == 'login'){
-	$user = $api->getParam('user');
+if($api->getCommand() == 'signin'){
+	$email = $api->getParam('email');
 	$password = $api->getParam('password');
 	$remember = ($api->getParam('remember') == 1) ? true : false;
 
-	if(empty($user)) 								    $api->clientError('Не указан пользователь','user');
-    if(empty($password)) 							    $api->clientError('Указан пустой пароль', 'password');
+	if(empty($email)) 								    $api->clientError($L['login:signin:msg:empty_email'],'email');
+    if(empty($password)) 							    $api->clientError($L['login:signin:msg:empty_password'], 'password');
     
-    if(!$auth->IsUser($user))                          $api->clientError('Такого пользователя не существует','user');
-	if(!$auth->Login($user,$password,$remember)) 	    $api->serverError('Указан неверный пароль', 'password');
+    if(!$auth->IsEmail($email))                         $api->serverError($L['login:signin:msg:email_not_exists'],'email');
+	if(!$auth->Login($email,$password,$remember)) 	    $api->serverError($L['login:signin:msg:wrong_password'], 'password');
 
 	$api->makeJSON('success');
 }

@@ -1,5 +1,8 @@
 {
     "appname": "CoLocalize",
+    "navbar":{
+        "signin":"Sign In"
+    },
     "login": {
         "title":"Sign In or Sign Up",
         "signin":{
@@ -9,10 +12,16 @@
                 "password":"Password",
                 "remember": "Remember me",
                 "button": "Sign IN"
+            },
+            "msg":{
+                "empty_email":"Please enter your E-Mail",
+                "empty_password":"Please enter your password",
+                "email_not_exists":"This E-Mail doesn't match any user",
+                "wrong_password":"Your password is invalid. Try again!"
             }
         },
         "signup":{
-            "title":"Sign Up",
+            "title":"Create an Account",
             "form":{
                 "fullname":"Full Name",
                 "email":"E-Mail",

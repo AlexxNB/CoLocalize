@@ -31,7 +31,28 @@ function doSignUp(){
 			enable('#doSignIn');
 			return false;
 		}
-		document.location.href = '/';		
+		locate('/projects/');		
+	});
+}
+
+function doSignIn(){
+	var email = $('#email').val();
+	var password = $('#password').val();
+	var remember = ($('#remember').prop("checked")) ? '1' : '0';
+
+	startLoading('#doSignIn');
+	disable('#doSignUp');
+	clearInpError();
+
+	getJSON('login','signin',{email:email, password:password, remember:remember},function(data) {
+		if(data.status != 200){
+			if(data.data == 'email') setInpError('#email',data.error);
+			if(data.data == 'password') setInpError('#password',data.error);
+			stopLoading('#doSignIn');
+			enable('#doSignUp');
+			return false;
+		}
+		locate('/projects/');		
 	});
 }
 
