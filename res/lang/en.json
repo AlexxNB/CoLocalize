@@ -1,7 +1,8 @@
 {
     "appname": "CoLocalize",
     "navbar":{
-        "signin":"Sign In"
+        "signin":"Sign In",
+        "logout":"Logout"
     },
     "login": {
         "title":"Sign In or Sign Up",
