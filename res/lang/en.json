@@ -4,6 +4,12 @@
         "signin":"Sign In",
         "logout":"Logout"
     },
+    "404":{
+        "title":"Page not found",
+        "page_not_found":"Sorry, requested page wasn't found",
+        "go_to_main_page":"Try to start from the main page",
+        "to_the_mainpage":"Go main page"
+    },
     "login": {
         "title":"Sign In or Sign Up",
         "signin":{
