@@ -34,6 +34,10 @@ function togglePubLink(){
 	}
 }
 
+function doCopyLink(){
+	
+}
+
 function doCreateProject(){
 	var title = $('#title').val();
 	var descr = $('#descr').val();

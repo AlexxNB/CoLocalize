@@ -16,6 +16,7 @@ function preProc(){
     //Default JS files
       $result['js'][] = '/res/js/jquery.min.js';
       $result['js'][] = '/res/js/common.js';
+      $result['js'][] = '/res/js/spectre.js';
 
     //Default variables
     $result['vars']['Ver'] = 1;

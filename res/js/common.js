@@ -1,17 +1,3 @@
-$(document).ready(function() {
-    var ddTimer;
-    $('.overdown').mouseenter(function(){
-        clearTimeout(ddTimer);
-        $(this).addClass('active');
-    });	
-
-    $('.overdown').mouseleave(function(){
-        ddTimer = setTimeout(function(e){
-            e.removeClass('active');
-        },200,$(this));
-    });
-});
-
 function getJSON(group,command,data,func){
     $.getJSON('/api/'+group+'/'+command+'/',data)
         .done(func)
