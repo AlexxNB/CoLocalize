@@ -1,4 +1,4 @@
-<?php if($projects):?>
+<?php if($Projects):?>
 
 <?php else: ?>
 <div class="empty">

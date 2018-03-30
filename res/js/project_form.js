@@ -19,10 +19,13 @@ function togglePubLink(){
 	if(isPublic){
 		getJSON('projects','getPublicLink',{pid:pid},function(resp) {
 			var url = '';
+			var code = '';
 			if(resp.status == 200){
-				url = resp.data;
+				url = resp.data.url;
+				code = resp.data.code;
 			}
 			$('#public_link').val(url);
+			$('#public_link').data('code',code);
 			$('#pl_container').slideDown(200);
 			$('#public_descr').fadeIn(200);
 		});
@@ -48,21 +51,20 @@ function doCopyLink(){
 function doCreateProject(){
 	var title = $('#title').val();
 	var descr = $('#descr').val();
-	var public = ($('#public').prop("checked")) ? '1' : '0';
+	var isPublic = ($('#public').prop("checked")) ? '1' : '0';
+	var pubLinkCode = $('#public_link').data('code');
 
 	startLoading('#doCreateProject');
 	clearInpError();
 
-	getJSON('projects','add',{name:name, email:email, password:password, password2:password2},function(resp) {
+	getJSON('projects','add',{title:title, descr:descr, isPublic:isPublic, pubLinkCode:pubLinkCode},function(resp) {
 		if(resp.status != 200){
-			if(resp.data == 'name') setInpError('#rName',data.error);
-			if(resp.data == 'email') setInpError('#rEmail',data.error);
-			if(resp.data == 'password') setInpError('#rPassword',data.error);
-			if(resp.data == 'password2') setInpError('#rPassword2',data.error);
-			stopLoading('#doSignUp');
-			enable('#doSignIn');
+			if(resp.data == 'title') setInpError('#title',resp.error);
+			if(resp.data == 'descr') setInpError('#descr',resp.error);
+			if(resp.data == 'pubLink') setInpError('#public_link',resp.error);
+			stopLoading('#doCreateProject');
 			return false;
 		}
-		locate('/projects/');		
+		locate('/langauages/'+resp.data+'/');		
 	});
 }

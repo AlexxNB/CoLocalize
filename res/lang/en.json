@@ -68,9 +68,16 @@
             "create_button":"Create project",
             "msg":{
                 "copy_ok": "Public Link is in your Clipboard!",
-                "copy_err": "Copy failed! Use Ctrl+C to copy manualy!"
+                "copy_err": "Copy failed! Use Ctrl+C to copy manualy!",
+                "empty_title": "Please enter name of the project.",
+                "empty_descr": "Do not leave description empty.",
+                "empty_publink": "There should be Public Link! Reload the page!",
+                "dub_publink": "Please toggle switch off and on to generate new Public Link",
+                "long_title": "Title too long! Max 128 characters.",
+                "long_descr": "Description too long! Max 255 characters."
             }
         }
     },
-    "system_error":"System Error"
+    "system_error":"System Error",
+    "auth_require":"Require authorization"
 }

@@ -25,48 +25,39 @@ if($api->getCommand() == 'getPublicLink'){
 			}
 		
 	$url = $utils->GetHostURL().'/projects/p/'.$code;
-	$api->makeJSON($url);			
+	$resp = array(
+		'url'=>$url,
+		'code'=>$code
+	);
+	$api->makeJSON($resp);			
 }
 
 
 
-//User register
+//Create new project
 if($api->getCommand() == 'add'){
-	$name = $api->getParam('name');
-	$email = $api->getParam('email');
-	$password = $api->getParam('password');
-	$password2 = $api->getParam('password2');
+	if(!$user = $auth->GetUser()) $api->serverError($L['auth_require']);
 
-	if(empty($name)) 								    $api->clientError($L['login:signup:msg:empty_name'],'name');
-	if(empty($email)) 								    $api->clientError($L['login:signup:msg:empty_email'],'email');
-	if(empty($password)) 							    $api->clientError($L['login:signup:msg:empty_password'],'password');
-	if(empty($password2)) 							    $api->clientError($L['login:signup:msg:empty_password2'],'password2');
+	$title = $api->getParam('title');
+	$descr = $api->getParam('descr');
+	$isPublic = ($api->getParam('isPublic') == 1) ? true : false;
+	$pubLinkCode = $api->getParam('pubLinkCode');
 
-	if(mb_strlen($name,"UTF-8") < 2) 					$api->clientError($L['login:signup:msg:name_too_short'],'name');
-	if(!filter_var($email, FILTER_VALIDATE_EMAIL))		$api->clientError($L['login:signup:msg:email_fail'],'email');
+	if(empty($title)) 								    $api->clientError($L['projects:form:msg:empty_title'],'title');
+	if(empty($descr)) 								    $api->clientError($L['projects:form:msg:empty_descr'],'descr');
+	if($isPublic && empty($descr)) 					    $api->clientError($L['projects:form:msg:empty_publink'],'pubLink');
 
-	if($password != $password2)							$api->clientError($L['login:signup:msg:password_mismatch'],'password2');
+	if(strlen($title) > 128)							$api->clientError($L['projects:form:msg:long_title'],'title');
+	if(strlen($descr) > 255)							$api->clientError($L['projects:form:msg:long_descr'],'descr');
 
-	if($auth->IsEmail($email))							$api->serverError($L['login:signup:msg:email_exists'],'email');
+	if($prj->GetProjectByCode($pubLinkCode))			$api->serverError($L['projects:form:msg:dub_publink'],'pubLink');
 
-	if(!$uid = $auth->Register($email,$password,$name))	$api->serverError($L['system_error']);
-	$auth->AddPriv($uid,'contributor');
-	$api->makeJSON('success');
-}
 
-// Авторизация пользователя
-if($api->getCommand() == 'signin'){
-	$email = $api->getParam('email');
-	$password = $api->getParam('password');
-	$remember = ($api->getParam('remember') == 1) ? true : false;
-
-	if(empty($email)) 								    $api->clientError($L['login:signin:msg:empty_email'],'email');
-    if(empty($password)) 							    $api->clientError($L['login:signin:msg:empty_password'], 'password');
-    
-    if(!$auth->IsEmail($email))                         $api->serverError($L['login:signin:msg:email_not_exists'],'email');
-	if(!$auth->Login($email,$password,$remember)) 	    $api->serverError($L['login:signin:msg:wrong_password'], 'password');
-
-	$api->makeJSON('success');
+	if(!$pid = $prj->CreateProject($title,$descr,$user['id']))	$api->serverError($L['system_error']);
+	$prj->MakePublic($pid,$pubLinkCode);
+	$prj->SetUserRole($pid,$user['id'],'admin');
+	
+	$api->makeJSON($pid);
 }
 
 $api->clientError('Неизвестная команда');
