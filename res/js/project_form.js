@@ -35,7 +35,14 @@ function togglePubLink(){
 }
 
 function doCopyLink(){
-	
+	enable('#public_link');
+	$('#public_link').select();
+	disable('#public_link');
+	if(copyToClipboard('public_link')) {
+		showToast($('#doCopyLink').data('ok'));
+	}else{
+		showToast($('#doCopyLink').data('err'),{type:'error',duration:3000});
+	}
 }
 
 function doCreateProject(){

@@ -16,9 +16,12 @@ function repairDropdown(){
     });
 }
 
-function showToast(msg,duration){
+function showToast(msg,config){
+    config = config || {}
 
-    duration = duration || 2000;
+    config.duration = config.duration || 2000;
+    config.type = config.type || 'normal';
+    
 
     var container = null;
     if(!exists('#toast-container')){
@@ -35,6 +38,20 @@ function showToast(msg,duration){
 
     toast.addClass('toast');
     close.addClass('btn btn-clear float-right');
+    switch(config.type){
+        case 'error':
+            toast.addClass('toast-error');
+            break; 
+        case 'primary':
+            toast.addClass('toast-primary');
+            break; 
+        case 'success':
+            toast.addClass('toast-success');
+            break; 
+        case 'warning':
+            toast.addClass('toast-warning');
+            break; 
+    }
 
     toast.html(msg);
     toast.append(close);
@@ -44,7 +61,7 @@ function showToast(msg,duration){
         closeToast(toast);
     });
 
-    setTimeout(closeToast,duration,toast);
+    setTimeout(closeToast,config.duration,toast);
 
     container.append(toast); 
     toast.fadeIn(500);

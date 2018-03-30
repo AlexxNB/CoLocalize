@@ -65,7 +65,11 @@
             "public_descr":"Everybody can join the project with public link:",
             "public_link":"Public Link",
             "copy_link":"Copy Link",
-            "create_button":"Create project"
+            "create_button":"Create project",
+            "msg":{
+                "copy_ok": "Public Link is in your Clipboard!",
+                "copy_err": "Copy failed! Use Ctrl+C to copy manualy!"
+            }
         }
     },
     "system_error":"System Error"

@@ -25,7 +25,7 @@
   <div class="input-group">
     <span class="input-group-addon"><?=$L['projects:form:public_link']?></span>
     <input type="text" class="form-input"  disabled="disabled" id="public_link">
-    <button class="btn btn-primary input-group-btn" id="doCopyLink"><i class="icon-copy"></i> <?=$L['projects:form:copy_link']?></button>
+    <button class="btn btn-primary input-group-btn" id="doCopyLink" data-ok="<?=$L['projects:form:msg:copy_ok']?>" data-err="<?=$L['projects:form:msg:copy_err']?>"><i class="icon-copy"></i> <?=$L['projects:form:copy_link']?></button>
   </div>
 </div>
 
