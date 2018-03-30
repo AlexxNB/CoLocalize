@@ -49,5 +49,24 @@
         },
         "or":"OR"
     },
+    "projects":{
+        "title":"My Projects",
+        "no_projects":"You do not participate in any project",
+        "you_can_create":"You can create your own project.",
+        "create_project":"Create project",
+        "add": "Create Project",
+        "form":{
+            "header_add": "Create your project",
+            "title_label":"Name of the project",
+            "title":"Title",
+            "description_label":"Few words about the project",
+            "description":"Description",
+            "make_public":"Make public.",
+            "public_descr":"Everybody can join the project with public link:",
+            "public_link":"Public Link",
+            "copy_link":"Copy Link",
+            "create_button":"Create project"
+        }
+    },
     "system_error":"System Error"
 }

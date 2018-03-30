@@ -38,7 +38,7 @@ class Restapi
 	
 	public function makeJSON($array)
 	{
-		$ar['result'] = $array;
+		$ar['data'] = $array;
 		$ar['status'] = 200;
 		
 		echo json_encode($ar,JSON_UNESCAPED_UNICODE);

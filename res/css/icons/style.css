@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'colocolize';
-  src:  url('fonts/colocolize.eot?ctlyq1');
-  src:  url('fonts/colocolize.eot?ctlyq1#iefix') format('embedded-opentype'),
-    url('fonts/colocolize.ttf?ctlyq1') format('truetype'),
-    url('fonts/colocolize.woff?ctlyq1') format('woff'),
-    url('fonts/colocolize.svg?ctlyq1#colocolize') format('svg');
+  src:  url('fonts/colocolize.eot?u87rd8');
+  src:  url('fonts/colocolize.eot?u87rd8#iefix') format('embedded-opentype'),
+    url('fonts/colocolize.ttf?u87rd8') format('truetype'),
+    url('fonts/colocolize.woff?u87rd8') format('woff'),
+    url('fonts/colocolize.svg?u87rd8#colocolize') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -30,9 +30,18 @@
 .icon-down:before {
   content: "\f140";
 }
+.icon-copy:before {
+  content: "\f18f";
+}
 .icon-emo-P:before {
   content: "\f1f9";
 }
+.icon-folder:before {
+  content: "\f256";
+}
 .icon-logout:before {
   content: "\f343";
+}
+.icon-add:before {
+  content: "\f415";
 }

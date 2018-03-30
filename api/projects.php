@@ -2,19 +2,40 @@
 require_once('../classes/class_restapi.php');
 require_once('../classes/class_auth.php');
 require_once('../classes/class_page.php');
+require_once('../classes/class_projects.php');
+require_once('../classes/class_utils.php');
 $api = new Restapi();
 $auth = new Auth();
 $page = new Page();
+$prj = new Projects();
+$utils = new Utils();
 
 $command = $api->getCommand();
 $L = $page->L;
 
+//Get Public Link For The Project
+if($api->getCommand() == 'getPublicLink'){
+	$pid = $api->getParam('pid');
+	$code = uniqid();
+
+	if(!empty($pid))
+		if($project = $prj->GetProject($pid))
+			if(!empty($project['public_link'])){
+				$code = $project['public_link'];
+			}
+		
+	$url = $utils->GetHostURL().'/projects/p/'.$code;
+	$api->makeJSON($url);			
+}
+
+
+
 //User register
-if($api->getCommand() == 'signup'){
+if($api->getCommand() == 'add'){
 	$name = $api->getParam('name');
 	$email = $api->getParam('email');
-	$password = $api->getParam('password',false);
-	$password2 = $api->getParam('password2',false);
+	$password = $api->getParam('password');
+	$password2 = $api->getParam('password2');
 
 	if(empty($name)) 								    $api->clientError($L['login:signup:msg:empty_name'],'name');
 	if(empty($email)) 								    $api->clientError($L['login:signup:msg:empty_email'],'email');
@@ -36,7 +57,7 @@ if($api->getCommand() == 'signup'){
 // Авторизация пользователя
 if($api->getCommand() == 'signin'){
 	$email = $api->getParam('email');
-	$password = $api->getParam('password',false);
+	$password = $api->getParam('password');
 	$remember = ($api->getParam('remember') == 1) ? true : false;
 
 	if(empty($email)) 								    $api->clientError($L['login:signin:msg:empty_email'],'email');
