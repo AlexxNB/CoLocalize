@@ -200,6 +200,8 @@ class DB{
     private function _printError($error, $query = ''){
         if(self::DEBUG){
             echo $error;
+            echo "\r\n";
+            echo $query;
         }else{
             header("HTTP/1.0 500 Internal Server Error");
         }

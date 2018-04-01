@@ -19,9 +19,9 @@ if($api->getCommand() == 'getPublicLink'){
 	$code = uniqid();
 
 	if(!empty($pid))
-		if($project = $prj->GetProject($pid))
-			if(!empty($project['public_link'])){
-				$code = $project['public_link'];
+		if($Project = $prj->GetProject($pid))
+			if(!empty($Project->PublicLink)){
+				$code = $Project->PublicLink;
 			}
 		
 	$url = $utils->GetHostURL().'/projects/p/'.$code;
@@ -34,7 +34,7 @@ if($api->getCommand() == 'getPublicLink'){
 
 
 
-//Create new project
+//Create new project or save one
 if($api->getCommand() == 'add' || $api->getCommand() == 'save'){
 	$save = ($api->getCommand() == 'save') ? true : false;
 	if(!$user = $auth->GetUser()) $api->serverError($L['auth_require']);
@@ -47,7 +47,8 @@ if($api->getCommand() == 'add' || $api->getCommand() == 'save'){
 
 	if($save){
 		if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
-		if(!$prj->CheckUserRole($pid,$user['id'],'admin')) $api->serverError($L['auth_error']);
+		if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+		if(!$Project->CheckUserRole($user['id'],'admin')) $api->serverError($L['auth_error']);
 	}
 
 
@@ -61,19 +62,19 @@ if($api->getCommand() == 'add' || $api->getCommand() == 'save'){
 	if(!$save && $isPublic && $prj->GetProjectByCode($pubLinkCode))			$api->serverError($L['projects:form:msg:dub_publink'],'pubLink');
 
 	if($save){
-		if(!$prj->SaveProject($pid,$title,$descr))		$api->serverError($L['system_error']);
+		if(!$Project->SaveProject($title,$descr))		$api->serverError($L['system_error']);
 		if($isPublic) {
-			$prj->MakePublic($pid,$pubLinkCode);
+			$Project->MakePublic($pubLinkCode);
 		}else{
-			$prj->MakePrivate($pid);
+			$Project->MakePrivate();
 		}
 	}else{
-		if(!$pid = $prj->CreateProject($title,$descr,$user['id']))	$api->serverError($L['system_error']);
-		$prj->SetUserRole($pid,$user['id'],'admin');
-		if($isPublic) $prj->MakePublic($pid,$pubLinkCode);
+		if(!$Project = $prj->CreateProject($title,$descr,$user['id']))	$api->serverError($L['system_error']);
+		$Project->SetUserRole($user['id'],'admin');
+		if($isPublic) $Project->MakePublic($pubLinkCode);
 	}
 
-	$api->makeJSON($pid);
+	$api->makeJSON($Project->ID);
 }
 
 //Delete project
@@ -83,9 +84,11 @@ if($api->getCommand() == 'delete'){
 	if(!$user = $auth->GetUser()) $api->serverError($L['auth_require']);
 
 	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
-	if(!$prj->CheckUserRole($pid,$user['id'],'admin')) $api->serverError($L['auth_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
 
-	if(!$prj->DeleteProject($pid))	$api->serverError($L['system_error']);
+	if(!$Project->CheckUserRole($user['id'],'admin')) $api->serverError($L['auth_error']);
+
+	if(!$Project->DeleteProject())	$api->serverError($L['system_error']);
 
 	$api->makeJSON('success');
 }

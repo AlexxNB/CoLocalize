@@ -39,14 +39,14 @@ if($action == 'add'){
 if($action == 'edit'){
     $pid = $page->GetURL(3);
     if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
-    if(!$project = $prj->GetProject($pid)) $page->Location('/projects/');
-    if(!$prj->CheckUserRole($pid,$user['id'],'admin')) $page->Location('/projects/');
+    if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
+    if(!$Project->CheckUserRole($user['id'],'admin')) $page->Location('/projects/');
 
     $page->AddJSLink('/res/js/project_form.js');
     
-    $page->Title = $page->L['projects:edit'].': '.$project['title'];
+    $page->Title = $page->L['projects:edit'].': '.$Project->Title;
     $Form = $page->View('project_edit_form');
-    $Form->Project = $project;
+    $Form->Project = $Project;
     $page->Content = $Form->HTML();
     $page->makePage();
 }

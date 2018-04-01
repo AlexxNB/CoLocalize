@@ -4,17 +4,17 @@
   <div class="mt"></div>
 
   <?php foreach($Projects as $project):?>
-  <div class="tile project-tile" id="pid-<?=$project['id']?>">
+  <div class="tile project-tile" id="pid-<?=$project->ID?>">
     <div class="tile-icon">
         <div class="progress-icon">100%</div>
     </div>
     <div class="tile-content">
-      <p class="title"><a href="/languages/<?=$project['id']?>/"><?=$project['title']?></a></p>
-      <p class="descr"><?=$project['descr']?></p>
+      <p class="title"><a href="/languages/<?=$project->ID?>/"><?=$project->Title?></a></p>
+      <p class="descr"><?=$project->Descr?></p>
     </div>
     <div class="tile-action">
-      <a class="btn" href="/projects/edit/<?=$project['id']?>/"><i class="icon-edit"></i> <?=$L['projects:list:edit']?></a>
-      <button class="btn doDeleteProject" data-pid="<?=$project['id']?>"><i class="icon-delete"></i> <?=$L['projects:list:delete']?></button>
+      <a class="btn" href="/projects/edit/<?=$project->ID?>/"><i class="icon-edit"></i> <?=$L['projects:list:edit']?></a>
+      <button class="btn doDeleteProject" data-pid="<?=$project->ID?>"><i class="icon-delete"></i> <?=$L['projects:list:delete']?></button>
     </div>
   </div>
   <?php endforeach;?>
