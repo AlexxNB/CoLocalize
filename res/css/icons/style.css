@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'colocolize';
-  src:  url('fonts/colocolize.eot?ze5w1p');
-  src:  url('fonts/colocolize.eot?ze5w1p#iefix') format('embedded-opentype'),
-    url('fonts/colocolize.ttf?ze5w1p') format('truetype'),
-    url('fonts/colocolize.woff?ze5w1p') format('woff'),
-    url('fonts/colocolize.svg?ze5w1p#colocolize') format('svg');
+  src:  url('fonts/colocolize.eot?1anpt8');
+  src:  url('fonts/colocolize.eot?1anpt8#iefix') format('embedded-opentype'),
+    url('fonts/colocolize.ttf?1anpt8') format('truetype'),
+    url('fonts/colocolize.woff?1anpt8') format('woff'),
+    url('fonts/colocolize.svg?1anpt8#colocolize') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,8 +27,14 @@
 .icon-account:before {
   content: "\f004";
 }
+.icon-ok:before {
+  content: "\f12c";
+}
 .icon-down:before {
   content: "\f140";
+}
+.icon-close:before {
+  content: "\f156";
 }
 .icon-copy:before {
   content: "\f18f";

@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	$('#doCreateProject').click(function(){
-		doCreateProject();
+		doProject('add');
+	});
+
+	$('#doSaveProject').click(function(){
+		doProject('save');
 	});
 
 	$('#doCopyLink').click(function(){
@@ -10,6 +14,8 @@ $(document).ready(function() {
 	$("#public").change(function() {
 		togglePubLink();
 	});
+
+	togglePubLink();
 });
 
 
@@ -48,23 +54,36 @@ function doCopyLink(){
 	}
 }
 
-function doCreateProject(){
+function doProject(action){
+	if(action != 'save' && action != 'add') return false;
+
+	var ButID = '#doCreateProject';
+	if(action == 'save'){
+		ButID =  '#doSaveProject';
+	}
+
 	var title = $('#title').val();
 	var descr = $('#descr').val();
 	var isPublic = ($('#public').prop("checked")) ? '1' : '0';
 	var pubLinkCode = $('#public_link').data('code');
+	var pid = $('#public').data('pid');
 
-	startLoading('#doCreateProject');
+	startLoading(ButID);
 	clearInpError();
 
-	getJSON('projects','add',{title:title, descr:descr, isPublic:isPublic, pubLinkCode:pubLinkCode},function(resp) {
+	getJSON('projects',action,{title:title, descr:descr, isPublic:isPublic, pubLinkCode:pubLinkCode,pid:pid},function(resp) {
 		if(resp.status != 200){
 			if(resp.data == 'title') setInpError('#title',resp.error);
 			if(resp.data == 'descr') setInpError('#descr',resp.error);
-			if(resp.data == 'pubLink') setInpError('#public_link',resp.error);
-			stopLoading('#doCreateProject');
+			if(resp.data == 'pubLink') setInpError('#public',resp.error);
+			stopLoading(ButID);
 			return false;
 		}
-		locate('/langauages/'+resp.data+'/');		
+
+		if(action == 'add'){
+			locate('/langauages/'+resp.data+'/');
+		}else{
+			locate('/projects/');
+		}		
 	});
 }

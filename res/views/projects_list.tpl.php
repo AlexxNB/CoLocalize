@@ -4,8 +4,7 @@
   <div class="mt"></div>
 
   <?php foreach($Projects as $project):?>
-
-  <div class="tile project-tile">
+  <div class="tile project-tile" id="pid-<?=$project['id']?>">
     <div class="tile-icon">
         <div class="progress-icon">100%</div>
     </div>
@@ -15,10 +14,28 @@
     </div>
     <div class="tile-action">
       <a class="btn" href="/projects/edit/<?=$project['id']?>/"><i class="icon-edit"></i> <?=$L['projects:list:edit']?></a>
-      <button class="btn"><i class="icon-delete"></i> <?=$L['projects:list:delete']?></button>
+      <button class="btn doDeleteProject" data-pid="<?=$project['id']?>"><i class="icon-delete"></i> <?=$L['projects:list:delete']?></button>
     </div>
   </div>
   <?php endforeach;?>
+
+<div class="modal modal-sm" id="modal-delete">
+  <span class="modal-overlay modal-close" aria-label="Close"></span>
+  <div class="modal-container">
+    <div class="modal-header">
+        <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <?=$L['projects:list:msg:sure_delete']?>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
+      <button class="btn btn-primary" id="confirmDelete" data-ok="<?=$L['projects:list:msg:delete_ok']?>" data-err="<?=$L['projects:list:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+    </div>
+  </div>
+</div>
 
 <?php else: ?>
 <div class="empty">

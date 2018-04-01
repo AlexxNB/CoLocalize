@@ -16,12 +16,14 @@ class Projects{
     public function GetProject($projectid){
         $db = new DB();
         if(!$project = $db->SelectRow('projects',"id=$projectid")) return false;
+        $this->_decodeTypes($project);
         return $project;
     }
 
     public function GetProjectByCode($code){
         $db = new DB();
         if(!$project = $db->SelectRow('projects',"public_link='$code'")) return false;
+        $this->_decodeTypes($project);
         return $project;
     }
 
@@ -35,11 +37,35 @@ class Projects{
         return $db->Insert('projects',$prop);
     }
 
+    public function SaveProject($projectid,$title,$descr){
+        $db = new DB();
+        $prop = array(
+            "title"=>$title,
+            "descr"=>$descr
+        );
+        return $db->Update('projects',$prop,"id=$projectid");
+    }
+
+    public function DeleteProject($projectid){
+        $db = new DB();
+        if(!$db->Delete('projects',"id=$projectid")) return false;
+        if(!$db->Delete('projects_users',"projectid=$projectid")) return false;
+        return true;
+    }
+
     public function MakePublic($projectid,$code){
         $db = new DB();
         $prop = array(
             'is_public'=>1,
             'public_link'=>$code
+        );
+        $db->Update('projects',$prop,"id=$projectid");
+    }
+
+    public function MakePrivate($projectid){
+        $db = new DB();
+        $prop = array(
+            'is_public'=>0
         );
         $db->Update('projects',$prop,"id=$projectid");
     }
@@ -61,6 +87,17 @@ class Projects{
             );
             $db->Insert('projects_users',$prop);
         }
+    }
+
+    public function CheckUserRole($projectid,$userid,$role){
+        $cRole = $this->GetUserRole($projectid,$userid);
+        if($cRole == $role) return true;
+        return false;
+    }
+
+    private function _decodeTypes($project){
+        if($project['is_public']==1) $project['is_public']=true;
+        return $project;
     }
 }
 ?>

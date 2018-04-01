@@ -56,7 +56,7 @@ class DB{
         $query = "DELETE FROM $table";
         if(!empty($where)) $query .= " WHERE $where";
 
-        $this->_execute($query);
+        return $this->_execute($query);
     }
 
     public function Update($table, $cols, $where=''){

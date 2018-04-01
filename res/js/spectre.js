@@ -1,5 +1,6 @@
 $(document).ready(function() {
     repairDropdown();
+    closeModals();
 });
 
 function repairDropdown(){
@@ -13,6 +14,12 @@ function repairDropdown(){
         ddTimer = setTimeout(function(e){
             e.removeClass('active');
         },200,$(this));
+    });
+}
+
+function closeModals(){
+    $(".modal-close").click(function(){
+        $(".modal").removeClass('active');
     });
 }
 
