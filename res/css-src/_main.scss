@@ -1,0 +1,65 @@
+#wrapper{
+    display:grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-rows: 50px 20px 1fr 50px;
+    grid-template-areas: 
+    "nav nav nav"
+    ". . ."
+    ". content ."
+    "footer footer footer";
+    min-height: 100vh;
+    max-height: 900px;
+}
+
+#nav{
+    grid-area: nav;
+    background-color: $primary-color;
+}
+
+#content{
+    grid-area: content;
+}
+
+#footer{
+    grid-area: footer;
+}
+
+#logo{
+    color:#FFFFFF;
+    font-size:1.5em;
+    padding-left:1em;
+}
+
+#logo:hover{
+    text-decoration: none;
+}
+
+#profile{
+    padding-right:.5em;
+}
+
+#accountBut{
+    color: $light-color;
+}
+
+.progress-icon{
+    width:54px;
+    height:54px;
+    background-color:$gray-color;
+    border-radius: 27px;
+
+    color:$light-color;
+    line-height:54px;
+    text-align:center;
+    font-weight:bold;
+
+    transition: all 0.1s linear;
+}
+
+.progress-icon:hover{
+    width:60px;
+    height:60px;
+    margin:-3px;
+    line-height:60px;
+    border-radius: 30px;
+}
