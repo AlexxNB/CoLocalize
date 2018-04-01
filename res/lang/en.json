@@ -76,6 +76,11 @@
                 "long_title": "Title too long! Max 128 characters.",
                 "long_descr": "Description too long! Max 255 characters."
             }
+        },
+        "list":{
+            "title":"My Projects",
+            "edit":"Edit",
+            "delete":"Delete"
         }
     },
     "system_error":"System Error",
