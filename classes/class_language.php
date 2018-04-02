@@ -36,7 +36,7 @@ class Language {
     }
 
     private function _getLangFile($lang){
-        $path = __DIR__."/../res/lang/$lang.json";
+        $path = __DIR__."/../res/locales/$lang.json";
 
         if(!file_exists($path)) return false;
 
