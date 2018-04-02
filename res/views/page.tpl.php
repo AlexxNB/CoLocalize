@@ -17,7 +17,7 @@
 					<?php if($User): ?>
 						<div class="dropdown">
 							<div class="btn-group">
-								<button id="accountBut" class="btn btn-link dropdown-toggle"><?=$User['email']?> <i class="icon-down"></i></button>
+								<button id="accountBut" class="btn btn-link dropdown-toggle"><?=$User->Name?> <i class="icon-down"></i></button>
 									<ul class="menu">
 										<li class="menu-item">
 											<a href="/login/logout"><i class="icon-logout"></i> <?=$L['navbar:logout']?></a>

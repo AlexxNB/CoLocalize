@@ -28,8 +28,8 @@ if($api->getCommand() == 'signup'){
 
 	if($auth->IsEmail($email))							$api->serverError($L['login:signup:msg:email_exists'],'email');
 
-	if(!$uid = $auth->Register($email,$password,$name))	$api->serverError($L['system_error']);
-	$auth->AddPriv($uid,'contributor');
+	if(!$User = $auth->Register($email,$password,$name))	$api->serverError($L['system_error']);
+	$User->AddPriv('contributor');
 	$api->makeJSON('success');
 }
 

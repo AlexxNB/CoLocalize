@@ -1,9 +1,9 @@
 <?php
 require_once("class_db.php");
 class Projects{
-    public function GetUserProjects($userid){
+    public function GetUserProjects($User){
         $db = new DB();
-        if(!$list = $db->SelectInArray('projects_users',"userid=$userid")) return false;
+        if(!$list = $db->SelectInArray('projects_users',"userid=$User->ID")) return false;
         $prList=array();
         foreach($list as $line){
             if(!$p = $this->GetProject($line['projectid'])) continue;
@@ -24,14 +24,14 @@ class Projects{
         return $this->_makeProjectObj($projectDB);
     }
 
-    public function CreateProject($title,$descr,$creator){
+    public function CreateProject($title,$descr,$Creator){
         $db = new DB();
         $prop = array(
             "title"=>$title,
             "descr"=>$descr,
             "is_public"=>0,
             "public_link"=>'',
-            "creator"=>$creator
+            "creator"=>$Creator->ID
         );
         if(!$pid = $db->Insert('projects',$prop)) return false;
         $prop["id"] = $pid;
@@ -68,27 +68,27 @@ class Project{
         return $db->Update('projects',$prop,"id=$this->ID");
     }
 
-    public function GetUserRole($userid){
+    public function GetUserRole($User){
         $db = new DB();
-        return $db->SelectCell('projects_users','role',"projectid=$this->ID AND userid=$userid");
+        return $db->SelectCell('projects_users','role',"projectid=$this->ID AND userid=$User->ID");
     }
 
-    public function SetUserRole($userid,$role){
+    public function SetUserRole($User,$role){
         $db = new DB();
-        if($this->GetUserRole($userid)){
-            $db->Update('projects_users',array('role'=>$role),"projectid=$this->ID AND userid=$userid");
+        if($this->GetUserRole($User)){
+            $db->Update('projects_users',array('role'=>$role),"projectid=$this->ID AND userid=$User->ID");
         }else{
             $prop = array(
                 "projectid"=>$this->ID,
-                "userid"=>$userid,
+                "userid"=>$User->ID,
                 "role"=>$role
             );
             $db->Insert('projects_users',$prop);
         }
     }
 
-    public function CheckUserRole($userid,$role){
-        $cRole = $this->GetUserRole($userid);
+    public function CheckUserRole($User,$role){
+        $cRole = $this->GetUserRole($User);
         if($cRole == $role) return true;
         return false;
     }

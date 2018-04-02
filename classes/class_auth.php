@@ -19,8 +19,7 @@ class Auth
 	}
 
 	public function IsEmail($email){
-		$db = new DB();
-		if($db->SelectRow('users',"email='$email'")) return true;
+		if($this->GetUserByEmail($email)) return true;
 		return false;
 	}
 
@@ -30,26 +29,27 @@ class Auth
         $user = array(
             'email'=>$email,
             'password'=>md5($password),
-            'name'=>$name
+			'name'=>$name,
+			'privs'=>'[]'
         );
-        return $db->Insert('users',$user);
+		if(!$uid = $db->Insert('users',$user)) return false;
+		$user['id']=$uid;
+		return $this->_makeUserObj($user);
 	}
 	  
   	public function Login($email,$password,$remember=true){
-		$db = new DB();
 		if(!$this->_isValid($email,$password)) return false;
-		$user = $db->selectRow("users","email='$email'");
+		if(!$User = $this->GetUserByEmail($email)) return false;
 
-		$secure =  $this->_makeSecure($user['id'],$user['user'],$user['password']);
+		$secure =  $this->_makeSecure($User->ID,$User->Email,$User->PassHash);
 
-		$_SESSION['userid'] = $user['id'];
+		$_SESSION['userid'] = $User->ID;
 		$_SESSION['securehash'] = $secure;
 
 
-		if($remember)
-		{
-		setcookie("userid", $admin['id'], time() + 3600*24*365,'/');
-		setcookie("securehash", $secure, time() + 3600*24*365,'/');
+		if($remember){
+			setcookie("userid", $User->ID, time() + 3600*24*365,'/');
+			setcookie("securehash", $secure, time() + 3600*24*365,'/');
 		}
 		return true;
   	}
@@ -71,7 +71,7 @@ class Auth
 
 		if(!$this->IsAuthed()) return $utils->SetGlobal('auth_user',false);
 		$user = $db->SelectRow('users','id='.$_SESSION['userid']);
-		if($user) $user = $this->_userDecodeArrays($user);
+		if($user) $user = $this->_makeUserObj($user);
 		return $utils->SetGlobal('auth_user',$user);
 	}
    
@@ -80,59 +80,74 @@ class Auth
 		$utils = new Utils();
 		if($utils->IsGlobal('auth_user_'.$userid)) return $utils->GetGlobal('auth_user_'.$userid);
 		$user =  $db->SelectRow('users','id='.$userid);
-		if($user) $user = $this->_userDecodeArrays($user);
+		if($user) $user = $this->_makeUserObj($user);
 		return $utils->SetGlobal('auth_user_'.$userid,$user);
 	}
 
-	public function HasPriv($userid,$priv){
-		if(!$user = $this->GetUserById($userid)) return false;
-		if(in_array($priv,$user['privs'])) return true;
-		elseif(in_array('god',$user['privs'])) return true;
-		else return false;
-	}
-
-	public function AddPriv($userid,$priv){
-		if(!$user = $this->GetUserById($userid)) return false;
-		if(in_array($priv,$user['privs'])) return false;
-		$user['privs'][]=$priv;
+	public function GetUserByEmail($email){
 		$db = new DB();
-		$db->Update('users', array('privs'=>json_encode($user['privs'])), "id=$userid");
+		if(!$user = $db->selectRow("users","email='$email'")) return false;
+		return $user = $this->_makeUserObj($user);
 	}
-
-	public function RemovePriv($userid,$priv){
-		if(!$user = $this->GetUserById($userid)) return false;
-		if(!in_array($priv,$user['privs'])) return false;
-		unset($user['privs'][array_search($priv,$user['privs'])]);
-		$db = new DB();
-		$db->Update('users', array('privs'=>json_encode($user['privs'])), "id=$userid");
-  	}
   
-  	private function _userDecodeArrays($user){
-		if($privs = json_decode($user['privs'],true)) 
-			$user['privs']=$privs;
+	private function _makeUserObj($data){
+		$User = new User();
+		$User->ID = $data['id'];
+		$User->Email = $data['email'];
+		$User->PassHash = $data['password'];
+		$User->Name = $data['name'];
+		if($privs = json_decode($data['privs'],true)) 
+			$User->Privs=$privs;
 		else
-			$user['privs']=array();
-		return $user;
-  	}
+			$User->Privs=array();
+		
+		return $User;
+	}
   
   	private function _isValidSession(){
-		$db = new DB();
-		$user = $db->selectRow('users','id='.$_SESSION['userid']);
-		$secure =  $this->_makeSecure($user['id'],$user['user'],$user['password']);
+		if(!$User = $this->GetUserById($_SESSION['userid'])) return false;
+		$secure =  $this->_makeSecure($User->ID,$User->Email,$User->PassHash);
 		if($_SESSION['securehash'] != $secure) return false;
 		return true;
 	}
 
 	private function _isValid($email,$password){
-		$db = new DB();
-    	if(!$user = $db->selectRow("users","email='$email'")) return false;
-		if(md5($password) != $user['password']) return false;
+		if(!$User = $this->GetUserByEmail($email)) return false;
+		if(md5($password) != $User->PassHash) return false;
 		return true;
 	}
 
-	private function _makeSecure($userid,$user,$password){
+	private function _makeSecure($userid,$email,$password){
 		$salt = 'salt'; //Change "salt", if want a little bit more security =)
-		return md5($salt.$userid.$user.$password.$salt);  
+		return md5($salt.$userid.$email.$password.$salt);  
 	}
+}
+
+class User{
+	public $ID;
+	public $Email;
+	public $PassHash;
+	public $Name;
+	public $Privs;
+
+	public function HasPriv($priv){
+		if(in_array($priv,$this->Privs)) return true;
+		elseif(in_array('god',$this->Privs)) return true;
+		else return false;
+	}
+
+	public function AddPriv($priv){
+		if(in_array($priv,$this->Privs)) return false;
+		$this->Privs[]=$priv;
+		$db = new DB();
+		$db->Update('users', array('privs'=>json_encode($this->Privs)), "id=$this->ID");
+	}
+
+	public function RemovePriv($priv){
+		if(!in_array($priv,$this->Privs)) return false;
+		unset($this->Privs[array_search($priv,$this->Privs)]);
+		$db = new DB();
+		$db->Update('users', array('privs'=>json_encode($this->Privs)), "id=$this->ID");
+  	}
 }
 ?>

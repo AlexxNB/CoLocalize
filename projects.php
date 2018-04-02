@@ -7,7 +7,7 @@ $page = new Page();
 $auth = new Auth();
 $prj = new Projects();
 
-if(!$user = $auth->GetUser()) $page->Location('/login');
+if(!$User = $auth->GetUser()) $page->Location('/login');
 
 $action = $page->GetURL(2);
 if(!$action) $action = 'list';
@@ -18,7 +18,7 @@ if($action == 'list'){
     $page->Title = $page->L['projects:title'];
     $List = $page->View('projects_list');
 
-    if($projects = $prj->GetUserProjects($user['id'])){
+    if($projects = $prj->GetUserProjects($User)){
         $List->Projects = $projects;
     }
 
@@ -40,7 +40,7 @@ if($action == 'edit'){
     $pid = $page->GetURL(3);
     if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
-    if(!$Project->CheckUserRole($user['id'],'admin')) $page->Location('/projects/');
+    if(!$Project->CheckUserRole($User,'admin')) $page->Location('/projects/');
 
     $page->AddJSLink('/res/js/project_form.js');
     
