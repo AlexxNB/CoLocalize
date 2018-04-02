@@ -1,2 +1,4 @@
 _config.php
 *.map
+.vscode
+.sass-cache
