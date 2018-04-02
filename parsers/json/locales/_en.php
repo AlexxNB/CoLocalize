@@ -1,0 +1,13 @@
+<?php
+$title = 'JSON Lang Files';
+
+$descr = "JSON (JavaScript Object Notation) is a lightweight data-interchange format.
+It is easy for humans to read and write and for machines to parse and generate. 
+JSON is a text format that is completely language independent but uses conventions that
+are familiar to programmers of the C-family of languages, including C, C++, C#, Java, JavaScript, Perl, Python, and many others.
+The Key-Value JSON is used mainly in Javascript apps and frameworks. 
+Every key is associated with a value, hierarchical data is supported. 
+It's used by angular-translate, i18next, chrome extensions, i18n-node and many other libraries.";
+
+$restrict[] = "JSON needs to be put in a .json extension file with an UTF-8 without BOM encoding";
+?>
