@@ -35,6 +35,16 @@
         font-size: .8em;
         color: $gray-color;
     }
+}
 
-    
+.pad-terms{
+    .terms-num{
+        line-height: 2em;
+        font-size:1.2em;
+        font-weight:bold;
+        color: $primary-color;
+        span{
+            color: $gray-color;
+        }
+    }
 }

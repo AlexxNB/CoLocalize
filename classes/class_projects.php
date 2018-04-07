@@ -31,6 +31,7 @@ class Projects{
             "descr"=>$descr,
             "is_public"=>0,
             "public_link"=>'',
+            "terms"=>0,
             "creator"=>$Creator->ID
         );
         if(!$pid = $db->Insert('projects',$prop)) return false;
@@ -39,8 +40,7 @@ class Projects{
     }
 
     private function _makeProjectObj($data){
-        $project = new Project();
-        $project->ID = $data['id'];
+        $project = new Project($data['id']);
         $project->Title = $data['title'];
         $project->Descr = $data['descr'];
         $project->IsPublic = ($data['is_public']==1) ? true : false;
@@ -58,6 +58,14 @@ class Project{
     public $IsPublic;
     public $PublicLink;
     public $Creator;
+    public $Terms;
+
+    public function __construct($projectid=false){
+        if($projectid) {
+            $this->ID = $projectid;
+            $this->Terms = new Terms($this);
+        }
+    }
 
     public function SaveProject($title,$descr){
         $db = new DB();
@@ -87,9 +95,11 @@ class Project{
         }
     }
 
-    public function CheckUserRole($User,$role){
-        $cRole = $this->GetUserRole($User);
+    public function CheckUserRole($User,$role,$role2=false,$role3=false){
+        if(!$cRole = $this->GetUserRole($User)) return false;
         if($cRole == $role) return true;
+        if($cRole == $role2) return true;
+        if($cRole == $role3) return true;
         return false;
     }
 
@@ -115,6 +125,55 @@ class Project{
             'is_public'=>0
         );
         $db->Update('projects',$prop,"id=$this->ID");
+    }
+}
+
+class Terms{
+    var $Project;
+    var $TermsQueue;
+
+    public function __construct($Project){
+        $this->Project = $Project;
+        $this->TermsQueue = array();
+    }
+
+    public function GetList(){
+        $db = new DB();
+        $terms = array();
+        if(!$data = $db->SelectInArray('terms',"projectid=".$this->Project->ID)) return $terms;
+        foreach($data as $line){
+            $term = new stdClass();
+            $term->ID = $line['id'];
+            $term->Name = $line['term'];
+            $terms[] = $term;
+        }
+
+        return $term;
+    }
+
+    public function Num(){
+        $db = new DB();
+        return $db->SelectNum('terms','projectid='.$this->Project->ID);
+    }
+
+    public function AddQueue($term){
+        $this->TermsQueue[] = $term;
+    }
+
+    public function SaveQueue(){
+        $db = new DB();
+        $num = count($this->TermsQueue);
+        if($num == 0) return false;
+        
+        $props = array();
+        foreach($this->TermsQueue as $term){
+            $props[] = array(
+                'projectid'=>$this->Project->ID,
+                'term'=>$term
+            );
+        }
+
+        if(!$db->Insert('terms',$props,true)) return false;
     }
 }
 ?>

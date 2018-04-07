@@ -1,6 +1,6 @@
 <?php
-class Parser{
-    // class Parser should contents three functions ImportTerms, ImportTranslation, ExportTranslation.
+class Parser_json extends Parser{
+    // class TheParser should contents three methods: ImportTerms, ImportTranslation, ExportTranslation.
 
     // Import terms from the file content.
     public function ImportTerms($content){
@@ -19,13 +19,17 @@ class Parser{
         return $strings;
     }
 
+    public function ExportTranslation(){
+        
+    }
+
 
     public function _arrayToStrings($array,$parent=''){
         if($parent != '') $parent = $parent.':';
         $Struct = array();
         foreach($array as $key=>$value){
             if(is_array($value)){
-                $Struct =  array_merge($Struct,$this->_makeStructure($array[$key],$parent.$key));
+                $Struct =  array_merge($Struct,$this->_arrayToStrings($array[$key],$parent.$key));
             }else{
                 $Struct[$parent.$key]=$value;
             }

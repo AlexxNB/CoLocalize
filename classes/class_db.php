@@ -31,25 +31,43 @@ class DB{
         }
     }
 
-    public function Insert($table, $cols){
+    public function Insert($table, $cols, $ignore=false){
         $c = '';
         $v = '';
         if(is_array($cols))
         {
-            foreach($cols as $col=>$value)
-            {
-                $c .= "$col,";
-                $value = str_replace("'","\'",$value);
-                $v .= "'$value',";
+            if(is_array($cols[0])) 
+                $lines = $cols;
+            else
+                $lines = array($cols);
+
+            $values = array();
+            $c = array();
+            $i=0;
+            foreach($lines as $line){
+                $v = array();
+                foreach($line as $col=>$value){
+                    if($i==0) $c[] = $col;
+                    $v[] = "'".str_replace("'","\'",$value)."'";
+                }
+                $i++;
+
+                if(count($c) != count($v)) continue;
+                
+                $values[] = "(".join(',',$v).")";
             }
-            $c = substr($c,0,-1);
-            $v = substr($v,0,-1);
+            $cols = "(".join(',',$c).")";
+            $vals = join(',',$values);
 
-            $query = "INSERT INTO $table ($c) VALUES ($v)";
-
+            if($ignore)
+                $query = "INSERT IGNORE INTO $table $cols VALUES $vals";
+            else
+                $query = "INSERT INTO $table $cols VALUES $vals";
+                
             $this->_execute($query);
             return $this->_lastID();
         }
+        return false;
     }
 
     public function Delete($table, $where=''){
@@ -104,6 +122,14 @@ class DB{
 
     public function NumRows(){
         return $this->_numRows();
+    }
+
+    public function SelectNum($table,$where=''){
+        $query = "SELECT COUNT(1) as num FROM $table";
+        if(!empty($where)) $query .= " WHERE $where";
+        $this->Query($query);
+        $res = $this->_fetch();
+        return $res['num'];
     }
 
     public function SelectInArray($table, $where='', $order='', $cols='*'){

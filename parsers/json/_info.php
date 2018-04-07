@@ -5,7 +5,7 @@
  * Version: 1.0
  */
 
-$filetype = 'json';
+$filetype = 'json|jsn';
 $website = 'http://json.org/';
 
 $sample = <<< EOT

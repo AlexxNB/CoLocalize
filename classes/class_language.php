@@ -1,11 +1,32 @@
 <?php
+require_once("class_utils.php");
 class Language {
+    var $_defLang = 'en';
     var $_delimeter = ':';
+    var $_path;
 
-    public function __construct(){
+    public function __construct($path=false){
+        if($path) 
+            $this->_path = $path;
+        else
+            $this->_path = __DIR__."/../res/locales/";
     }
 
-    public function GetLangVars($lang,$baselang='en'){
+    public function GetLanguage(){
+        $utils = new Utils();
+        if($utils->isGlobal('lang')) return $utils->getGlobal('lang');
+        return $this->_defLang;
+    }
+
+    public function SetLanguage($lang){
+        $utils = new Utils();
+        if(!$this->_isLang($lang)) $lang=$this->_defLang;
+        return $utils->SetGlobal('lang',$lang);
+    }
+
+    public function GetLangVars($lang=false,$baselang=false){
+        if(!$lang) $lang=$this->GetLanguage();
+        if(!$baselang) $baselang = $this->_defLang;
         $BaseStrings = $this->_getLangFile($baselang);
         if(!$BaseStrings) return array();
 
@@ -35,13 +56,20 @@ class Language {
         return $Struct;
     }
 
+    private function _getPath($lang){
+        return $this->_path.$lang.".json";
+    }
+
     private function _getLangFile($lang){
-        $path = __DIR__."/../res/locales/$lang.json";
-
-        if(!file_exists($path)) return false;
-
+        if(!$this->_isLang($lang)) return false;
+        $path = $this->_getPath($lang);
         $file = file_get_contents($path);
         return json_decode($file,true);
+    }
+
+    private function _isLang($lang){
+        if(file_exists($this->_getPath($lang))) return true;
+        return false;
     }
 
 }

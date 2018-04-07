@@ -18,13 +18,7 @@ class Page {
 
         $utils = new Utils();
         $lang = new Language();
-
-        if($utils->isGlobal('lang'))
-            $l = $utils->getGlobal('lang');
-        else    
-            $l = 'en';
-
-        $this->L = $lang->GetLangVars($l);
+        $this->L = $lang->GetLangVars();
 
         
         $this->_pageview = $this->View('page');

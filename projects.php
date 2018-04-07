@@ -50,3 +50,17 @@ if($action == 'edit'){
     $page->Content = $Form->HTML();
     $page->makePage();
 }
+
+if($action == 'view'){
+    $pid = $page->GetURL(3);
+    if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
+    if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
+    if(!$Project->CheckUserRole($User,'admin','contributor')) $page->Location('/projects/');
+
+    $page->Title = $Project->Title;
+    $Form = $page->View('project_view');
+    $Form->Project = $Project;
+    $Form->Termsnum = $Project->Terms->Num();
+    $page->Content = $Form->HTML();
+    $page->makePage();
+}

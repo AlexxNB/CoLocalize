@@ -9,7 +9,7 @@
         <div class="progress-icon">100%</div>
     </div>
     <div class="tile-content">
-      <p class="title"><a href="/languages/<?=$project->ID?>/"><?=$project->Title?></a></p>
+      <p class="title"><a href="/projects/view/<?=$project->ID?>/"><?=$project->Title?></a></p>
       <p class="descr"><?=$project->Descr?></p>
     </div>
     <div class="tile-action">

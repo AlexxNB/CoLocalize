@@ -90,10 +90,36 @@
                 "delete_err":"Failed to delete this project",
                 "delete_ok":"Project was successfully deleted."
             }
+        },
+        "view":{
+            "terms":{
+                "header":"Terms",
+                "terms":"terms",
+                "import":"Import",
+                "edit":"Edit"
+            }
+        }
+    },
+    "terms":{
+        "import":{
+            "title":"Import terms from a file",
+            "header":"Import terms from a file",
+            "choose_file":"Choose a file",
+            "choose_type":"Pick a type of the file",
+            "upload_button":"Upload file",
+            "msg":{
+                "unsupport":"Unsupported filetype",   
+                "unsupported_file":"We have no parser for this file. Please choose another one.",
+                "uploading":"Uploading file...",
+                "parsing":"Parsing file. Please wait.",
+                "error_upload":"Error during uploading the file",
+                "parsing_error":"Error during parsing file. Try change parser or upload another file."
+            }
         }
     },
     "yes":"Yes",
     "cancel":"Cancel",
+    "close":"Close",
     "system_error":"System Error",
     "auth_error":"Authorization Error",
     "auth_require":"Require authorization"

@@ -20,10 +20,12 @@ class Restapi
 	
 	public function getParam($param,$safe=true)
 	{
-		if(!isset($_GET[$param])) return false;
-		$txt = trim($_GET[$param]);
+		if(!isset($_GET[$param]) && !isset($_POST[$param])) return false;
 		
-		if($safe) $param = htmlspecialchars(strip_tags($txt));
+		if(isset($_GET[$param])) $txt = trim($_GET[$param]);
+		if(isset($_POST[$param])) $txt = trim($_POST[$param]);
+		
+		if($safe) $txt = htmlspecialchars(strip_tags($txt));
 
 		return $txt;
 	}

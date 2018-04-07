@@ -2,7 +2,7 @@ function getJSON(group,command,data,func){
     $.getJSON('/api/'+group+'/'+command+'/',data)
         .done(func)
         .fail(function( jqxhr, textStatus, error ) {
-            console.log( "Request Failed: " + err );
+            console.log( "Request Failed: " + error );
         });
 }
 
@@ -40,11 +40,11 @@ function stopLoading(id){
 }
 
 function disable(id){
-    $(id).attr('disabled','disabled');
+    $(id).prop('disabled',true);
 }
 
 function enable(id){
-    $(id).removeAttr('disabled');
+    $(id).prop('disabled',false);
 }
 
 function locate(url){
@@ -92,4 +92,35 @@ function copyToClipboard(id) {
       target.textContent = "";
   }
   return succeed;
+}
+
+function upload(group,command,file_data,data,success,progress){
+        var form_data = new FormData();
+        form_data.append('file', file_data);
+        $.each(data,function(name,value){
+            form_data.append(name, value);   
+        });
+        $.ajax({
+            url: '/api/'+group+'/'+command+'/',
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            success: success,
+            error: function( jqxhr, textStatus, error ) {
+                console.log( "Request Failed: " + error );
+            },
+            xhr: function(){
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt){
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        progress(percentComplete);
+                    }
+                }, false);
+                return xhr;
+            }
+        });
 }

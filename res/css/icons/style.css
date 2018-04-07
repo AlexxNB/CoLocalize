@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'colocolize';
-  src:  url('fonts/colocolize.eot?1anpt8');
-  src:  url('fonts/colocolize.eot?1anpt8#iefix') format('embedded-opentype'),
-    url('fonts/colocolize.ttf?1anpt8') format('truetype'),
-    url('fonts/colocolize.woff?1anpt8') format('woff'),
-    url('fonts/colocolize.svg?1anpt8#colocolize') format('svg');
+  src:  url('fonts/colocolize.eot?4ocq6p');
+  src:  url('fonts/colocolize.eot?4ocq6p#iefix') format('embedded-opentype'),
+    url('fonts/colocolize.ttf?4ocq6p') format('truetype'),
+    url('fonts/colocolize.woff?4ocq6p') format('woff'),
+    url('fonts/colocolize.svg?4ocq6p#colocolize') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -45,8 +45,14 @@
 .icon-emo-P:before {
   content: "\f1f9";
 }
+.icon-import:before {
+  content: "\f220";
+}
 .icon-folder:before {
   content: "\f256";
+}
+.icon-info:before {
+  content: "\f2fd";
 }
 .icon-edit:before {
   content: "\f64f";
@@ -56,4 +62,7 @@
 }
 .icon-add:before {
   content: "\f415";
+}
+.icon-upload:before {
+  content: "\f552";
 }
