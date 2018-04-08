@@ -39,5 +39,13 @@ if($action == 'view'){
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
     if(!$Project->CanUserDo($User,'edit_terms')) $page->Location('/projects/');
 
+    $page->AddJSLink('/res/js/terms_view.js');
+    
+    $page->Title = $page->L['terms:view:title'];
+    $List = $page->View('terms_view');
 
+    $List->Project= $Project;
+
+    $page->Content = $List->HTML();
+    $page->makePage();
 }

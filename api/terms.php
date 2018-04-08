@@ -46,5 +46,22 @@ if($api->getCommand() == 'importfile'){
 	}
 }
 
+//Load list by query
+if($api->getCommand() == 'load'){
+	$pid = $api->getParam('pid');
+	$num = $api->getParam('num');
+	$query = $api->getParam('query');
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+
+	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
+
+	if(!$list = $Project->Terms->GetList($query,$num,20)) $api->serverError($L['no_entries']);
+
+	$api->makeJSON($list);
+}
+
 $api->clientError('Unknown command');
 ?>

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'colocolize';
-  src:  url('fonts/colocolize.eot?4ocq6p');
-  src:  url('fonts/colocolize.eot?4ocq6p#iefix') format('embedded-opentype'),
-    url('fonts/colocolize.ttf?4ocq6p') format('truetype'),
-    url('fonts/colocolize.woff?4ocq6p') format('woff'),
-    url('fonts/colocolize.svg?4ocq6p#colocolize') format('svg');
+  src:  url('fonts/colocolize.eot?z4q6t9');
+  src:  url('fonts/colocolize.eot?z4q6t9#iefix') format('embedded-opentype'),
+    url('fonts/colocolize.ttf?z4q6t9') format('truetype'),
+    url('fonts/colocolize.woff?z4q6t9') format('woff'),
+    url('fonts/colocolize.svg?z4q6t9#colocolize') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -59,6 +59,9 @@
 }
 .icon-logout:before {
   content: "\f343";
+}
+.icon-search:before {
+  content: "\f349";
 }
 .icon-add:before {
   content: "\f415";

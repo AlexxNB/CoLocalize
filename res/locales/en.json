@@ -115,6 +115,16 @@
                 "error_upload":"Error during uploading the file",
                 "parsing_error":"Error during parsing file. Try change parser or upload another file."
             }
+        },
+        "view":{
+            "title":"Terms list",   
+            "header":"Terms list",   
+            "import_button":"Import",   
+            "add_button":"Add Term",
+            "search":"Search...",
+            "msg":{
+                "no_terms_found":"No terms were found"   
+            }
         }
     },
     "yes":"Yes",
@@ -122,5 +132,6 @@
     "close":"Close",
     "system_error":"System Error",
     "auth_error":"Authorization Error",
-    "auth_require":"Require authorization"
+    "auth_require":"Require authorization",
+    "no_entries":"No entries"
 }

@@ -31,12 +31,23 @@ function exists(id){
         return false;
 }
 
+function isJQObject(obj){
+    if(obj.jquery == undefined) return false;
+    return true;
+}
+
 function startLoading(id){
-    $(id).addClass('loading');
+    if(isJQObject(id))
+        id.addClass('loading');
+    else
+        $(id).addClass('loading');
 }
 
 function stopLoading(id){
-    $(id).removeClass('loading');
+    if(isJQObject(id))
+        id.removeClass('loading');
+    else
+        $(id).removeClass('loading');
 }
 
 function disable(id){

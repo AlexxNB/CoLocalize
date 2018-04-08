@@ -158,8 +158,49 @@ class Terms{
 
     public function GetList(){
         $db = new DB();
+
+        $query = false;
+        $start=0;
+        $lines=false;
+
+        $args = func_get_args();
+        $num = func_num_args();
+           
+        switch($num){
+            case 1:
+                if(is_numeric($args[0])) 
+                    $lines=$args[0];
+                elseif(is_string($args[0]))     
+                    $query=$args[0];
+            break;
+
+            case 2:
+                if(is_numeric($args[0]) && is_numeric($args[1])){
+                    $start = $args[0];
+                    $lines = $args[1];
+                }elseif(is_string($args[0]) && is_numeric($args[1])){
+                    $query = $args[0];
+                    $lines = $args[1];
+                }
+            break;
+
+            case 3:
+                if(is_string($args[0]) && is_numeric($args[1]) && is_numeric($args[2])){
+                    $query = $args[0];
+                    $start = $args[1];
+                    $lines = $args[2];
+                }
+            break;
+        }
+        if(empty($query)) $query=false;
+
+        $where = "projectid=".$this->Project->ID;
+        if($query) $where .= "AND term LIKE '%$query%'";
+        if($lines) $where .= " LIMIT $start,$lines";
+
+        
         $terms = array();
-        if(!$data = $db->SelectInArray('terms',"projectid=".$this->Project->ID)) return $terms;
+        if(!$data = $db->SelectInArray('terms',$where)) return $terms;
         foreach($data as $line){
             $term = new stdClass();
             $term->ID = $line['id'];
@@ -167,7 +208,7 @@ class Terms{
             $terms[] = $term;
         }
 
-        return $term;
+        return $terms;
     }
 
     public function Num(){

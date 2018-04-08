@@ -48,3 +48,24 @@
         }
     }
 }
+
+.term-tile{
+    transition: border-bottom-color 0.5s ease;
+    border-bottom:1px solid #FFFFFF;
+    margin-bottom:.5em;
+    padding-bottom:0em;
+
+    &:hover{
+        border-bottom-color: $gray-color-light;
+    }
+
+    .tile-icon{
+        width:5em;
+        
+    }
+}
+
+.term-search{
+    width: 15em;
+    margin-left: 5.5em;
+}

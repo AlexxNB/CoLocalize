@@ -59,7 +59,7 @@ function doImportFile(){
 	showProgress(function(){
 		upload('terms','importfile',file_data,{parser:parser,pid:pid},function(resp){
 			if(resp.status == 200){
-				locate('/terms/list/'+pid+'/');
+				locate('/terms/view/'+pid+'/');
 			}else{
 				hideProgress(function(){
 					showToast(resp.error,{type:'error'});
