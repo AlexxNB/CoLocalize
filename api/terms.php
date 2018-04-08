@@ -22,7 +22,7 @@ if($api->getCommand() == 'importfile'){
 
 	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
 	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
-	if(!$Project->CheckUserRole($User,'admin')) $api->serverError($L['auth_error']);
+	if(!$Project->CanUserDo($User,'import_terms')) $api->serverError($L['auth_error']);
 	
 	if(!$Parser = $parsers->GetParser($parserid)) $api->serverError($L['system_error']);
 	

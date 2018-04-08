@@ -48,7 +48,7 @@ if($api->getCommand() == 'add' || $api->getCommand() == 'save'){
 	if($save){
 		if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
 		if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
-		if(!$Project->CheckUserRole($User,'admin')) $api->serverError($L['auth_error']);
+		if(!$Project->CanUserDo($User,'create_project')) $api->serverError($L['auth_error']);
 	}
 
 
@@ -86,7 +86,7 @@ if($api->getCommand() == 'delete'){
 	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
 	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
 
-	if(!$Project->CheckUserRole($User,'admin')) $api->serverError($L['auth_error']);
+	if(!$Project->CanUserDo($User,'delete_project')) $api->serverError($L['auth_error']);
 
 	if(!$Project->DeleteProject())	$api->serverError($L['system_error']);
 

@@ -18,7 +18,7 @@ if($action == 'import'){
     $pid = $page->GetURL(3);
     if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
-    if(!$Project->CheckUserRole($User,'admin')) $page->Location('/projects/');
+    if(!$Project->CanUserDo($User,'import_terms')) $page->Location('/projects/');
 
 
     $page->AddJSLink('/res/js/terms_import.js');
@@ -27,8 +27,17 @@ if($action == 'import'){
     $List = $page->View('terms_import');
 
     $List->Parsers = $parsers->GetParsersList();
-    $List->Pid= $Project->ID;
+    $List->Project= $Project;
 
     $page->Content = $List->HTML();
     $page->makePage();
+}
+
+if($action == 'view'){
+    $pid = $page->GetURL(3);
+    if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
+    if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
+    if(!$Project->CanUserDo($User,'edit_terms')) $page->Location('/projects/');
+
+
 }

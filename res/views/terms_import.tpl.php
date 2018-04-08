@@ -1,4 +1,4 @@
-<h3><?=$L['terms:import:header']?></h3>
+<h3><?=$Project->Title?>: <span><?=$L['terms:import:header']?></span></h3>
 <div id="upload-form">
   <div class="form-group">
       <label for="importfilefile" class="form-label"><?=$L['terms:import:choose_file']?></label>
@@ -20,7 +20,8 @@
   </div>
 
   <div class="form-group text-center mt">
-      <button class="btn btn-primary" id="doImportFile" disabled="disabled" data-pid="<?=$Pid?>"><i class="icon-upload"></i> <?=$L['terms:import:upload_button']?></button> 
+      <a href="/projects/view/<?=$Project->ID?>/" class="btn"><i class="icon-close"></i> <?=$L['projects:form:cancel_button']?></a> 
+      <button class="btn btn-primary" id="doImportFile" disabled="disabled" data-pid="<?=$Project->ID?>"><i class="icon-upload"></i> <?=$L['terms:import:upload_button']?></button> 
   </div>
 </div>
 <div id="upload-progress" class="hide">

@@ -1,5 +1,5 @@
 <?php if($Project):?>
-<h3><?=$L['projects:form:header_edit']?>: <span><?=$Project->Title?></span></h3>
+<h3><span><?=$Project->Title?></span>: <?=$L['projects:form:header_edit']?></h3>
 <?php else:?>
   <h3><?=$L['projects:form:header_add']?></h3>
 <?php endif; ?>

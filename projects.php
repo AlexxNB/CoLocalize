@@ -40,7 +40,7 @@ if($action == 'edit'){
     $pid = $page->GetURL(3);
     if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
-    if(!$Project->CheckUserRole($User,'admin')) $page->Location('/projects/');
+    if(!$Project->CanUserDo($User,'edit_project')) $page->Location('/projects/');
 
     $page->AddJSLink('/res/js/project_form.js');
     
@@ -55,7 +55,7 @@ if($action == 'view'){
     $pid = $page->GetURL(3);
     if(!$pid || !preg_match('|^\d+$|',$pid)) $page->Location('/projects/');
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
-    if(!$Project->CheckUserRole($User,'admin','contributor')) $page->Location('/projects/');
+    if(!$Project->CanUserDo($User,'view_project')) $page->Location('/projects/');
 
     $page->Title = $Project->Title;
     $Form = $page->View('project_view');

@@ -103,6 +103,25 @@ class Project{
         return false;
     }
 
+    public function CanUserDo($User,$action){
+        switch($action){
+            case 'view_project':
+                if($this->CheckUserRole($User,'admin','contributor')) return true;
+            break;
+            
+            case 'create_project':
+            case 'delete_project':
+            case 'edit_project':
+            case 'import_terms':
+            case 'edit_terms':
+                if($this->CheckUserRole($User,'admin')) return true;
+            break;
+
+            default: 
+                return false;
+        }
+    }
+
     public function DeleteProject(){
         $db = new DB();
         if(!$db->Delete('projects',"id=$this->ID")) return false;
