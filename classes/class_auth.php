@@ -144,14 +144,14 @@ class User{
 		if(in_array($priv,$this->Privs)) return false;
 		$this->Privs[]=$priv;
 		$db = new DB();
-		$db->Query("UPDATE :n :u WHERE id=:d",'users',array('privs'=>json_encode($this->Privs)),$this->ID);
+		$db->Query("UPDATE :n :u WHERE :n=:d",'users',array('privs'=>json_encode($this->Privs)),'id',$this->ID);
 	}
 
 	public function RemovePriv($priv){
 		if(!in_array($priv,$this->Privs)) return false;
 		unset($this->Privs[array_search($priv,$this->Privs)]);
 		$db = new DB();
-		$db->Query("UPDATE :n :u WHERE id=:d",'users',array('privs'=>json_encode($this->Privs)),$this->ID);
+		$db->Query("UPDATE :n :u WHERE :n=:d",'users',array('privs'=>json_encode($this->Privs)),'id',$this->ID);
   	}
 }
 ?>
