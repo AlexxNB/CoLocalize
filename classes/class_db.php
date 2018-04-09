@@ -8,9 +8,9 @@ class DB{
     private $_password;
     private $_database;
     private $_port;
-    private $_result;
+    private $_conn;
 
-    public function __construct(){
+    public function __construct(){ 
         $this->_loadConfig();
         $pdo_mysql = 'mysql:host='. $this->_host .';dbname='. $this->_database .';port='. $this->_port;
 
@@ -18,7 +18,6 @@ class DB{
         {
             $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             ];
@@ -26,192 +25,53 @@ class DB{
             try {
                 $GLOBALS['DBConnected'] = new PDO($pdo_mysql, $this->_user, $this->_password, $options);
             } catch (PDOException $e) {
-                $this->_printError($e->getMessage());
+                $this->_error($e->getMessage());
             }
         }
+        $this->_conn = $GLOBALS['DBConnected'];
     }
 
-    public function Insert($table, $cols, $ignore=false){
-        $c = '';
-        $v = '';
-        if(is_array($cols))
-        {
-            if(is_array($cols[0])) 
-                $lines = $cols;
-            else
-                $lines = array($cols);
-
-            $values = array();
-            $c = array();
-            $i=0;
-            foreach($lines as $line){
-                $v = array();
-                foreach($line as $col=>$value){
-                    if($i==0) $c[] = $col;
-                    $v[] = "'".str_replace("'","\'",$value)."'";
-                }
-                $i++;
-
-                if(count($c) != count($v)) continue;
-                
-                $values[] = "(".join(',',$v).")";
-            }
-            $cols = "(".join(',',$c).")";
-            $vals = join(',',$values);
-
-            if($ignore)
-                $query = "INSERT IGNORE INTO $table $cols VALUES $vals";
-            else
-                $query = "INSERT INTO $table $cols VALUES $vals";
-                
-            $this->_execute($query);
-            return $this->_lastID();
-        }
-        return false;
+    public function Query(){
+        return $this->_query(func_get_args()); 
     }
 
-    public function Delete($table, $where=''){
-        $query = "DELETE FROM $table";
-        if(!empty($where)) $query .= " WHERE $where";
-
-        return $this->_execute($query);
+    public function GetCell(){
+        $res = $this->_query(func_get_args());
+        $row = $this->_fetch($res,false);
+        $this->_free($res);
+        if(!$row) return false;
+        return $row[0];        
     }
 
-    public function Update($table, $cols, $where=''){
-        $c = '';
-        if(is_array($cols))
-        {
-            foreach($cols as $col=>$value)
-            {
-                $value = str_replace("'","\'",$value);
-                $c .= "$col='$value',";
-            }
-            $c = substr($c,0,-1);
-
-            $query = "UPDATE $table SET $c";
-            if(!empty($where)) $query .= " WHERE $where";
-
-            $this->_execute($query);
-            return true;
-        }
-        else return false;
+    public function GetRow(){
+        $res = $this->_query(func_get_args());
+        $row = $this->_fetch($res);
+        $this->_free($res);
+        return $row;
     }
 
-    public function _lastID(){
-        return $GLOBALS['DBConnected']->lastInsertId();
-    }
+    public function GetArray(){
+        $res = $this->_query(func_get_args());
 
-    public function SelectCell($table, $cell, $where='', $order=''){
-        $this->Select($table, $where, $order, $cell);
-
-        if($this->_emptyResult())
+        if($this->_isEmpty($res)){
+            $this->_free($res);
             return false;
-
-        $c = $this->_fetch();
-        return $c[$cell];
-    }
-
-    public function SelectRow($table, $where=''){
-        $this->Select($table, $where);
-
-        if($this->_emptyResult())
-            return false;
-        else
-            return $this->_fetch();
-    }
-
-    public function NumRows(){
-        return $this->_numRows();
-    }
-
-    public function SelectNum($table,$where=''){
-        $query = "SELECT COUNT(1) as num FROM $table";
-        if(!empty($where)) $query .= " WHERE $where";
-        $this->Query($query);
-        $res = $this->_fetch();
-        return $res['num'];
-    }
-
-    public function SelectInArray($table, $where='', $order='', $cols='*'){
-        $this->Select($table, $where, $order, $cols);
-
-        if($this->_emptyResult())
-            return false;
-        else
-        {
-            $result = array();
-            while($line = $this->_fetch())
-            {
-                $result[] = $line;
+        }else{
+            $array = array();
+            while($row = $this->_fetch($res)){
+                $array[] = $row;
             }
-
-            return $result;
+            $this->_free($res);
+            return $array;
         }
     }
 
-    public function Select($table, $where='', $order='', $cols='*'){
-        if(is_array($cols))
-        {
-            $c = '';
-            foreach($cols as $col)
-            {
-                $c .= "$col,";
-            }
-            $c = substr($c, 0, -1);
-        }
-        else
-            $c = $cols;
-
-        $query = "SELECT $c FROM $table";
-
-        if(!empty($where)) $query .= " WHERE $where";
-        if(!empty($order)) $query .= " ORDER BY $order";
-
-        $this->Query($query);
-    }
-
-    public function FetchInArray(){
-        if($this->_emptyResult())
-            return false;
-        else
-        {
-            $result = array();
-            while($line = $this->_fetch())
-            {
-                $result[] = $line;
-            }
-
-            return $result;
-        }
-    }
-
-    public function Query($query){
-        $this->_result = $this->_execute($query);
-    }
-
-    private function _fetch(){
-        return $this->_result->fetch();
-    }
-
-    private function _numRows(){
-        return $this->_result->rowCount();
-    }
-
-    private function _emptyResult(){
-        if($this->_numRows() == 0) return true;
-        else return false;
-    }
-
-    private function _execute($query){
-        $result = '';
-
-        try {
-            $result = $GLOBALS['DBConnected']->query($query);
-        } catch (PDOException $e) {
-            $this->_printError($e->getMessage(), $query);
-        }
-
-        return $result;
+    public function Part(){
+        $args = func_get_args();
+        if(count($args) == 0) $this->_error("Require at least one argument");
+        $sample = array_shift($args);
+        $query = $this->_prepare($sample,$args);
+        return new DBPart($query);
     }
 
     private function _loadConfig(){
@@ -223,18 +83,202 @@ class DB{
         $this->_port = $port;
     }
 
-    private function _printError($error, $query = ''){
+    private function _error($error){
         if(self::DEBUG){
-            echo $error;
+            echo "DB Error in ".debug_backtrace()[1]['function'].": ";
             echo "\r\n";
-            echo $query;
+            echo $error;
         }else{
             header("HTTP/1.0 500 Internal Server Error");
         }
         exit();
     }
 
-    public function close(){
-        $GLOBALS['DBConnected'] = null;
+    private function _query($args){
+        if(count($args) == 0) $this->_error("Require at least one argument");
+        $sample = array_shift($args);
+        $query = $this->_prepare($sample,$args);
+        return $this->_execute($query);
+    }
+
+    private function _execute($query){
+        $result = NULL;
+
+        try {
+            $result = $this->_conn->query($query);
+        } catch (PDOException $e) {
+            $this->_error($e->getMessage()."\r\n".$query);
+        }
+
+        return $result;
+    }
+
+    private function _fetch($res,$object=true){
+        if($object)
+            return $res->fetch(PDO::FETCH_OBJ);
+        else
+            return $res->fetch(PDO::FETCH_BOTH);
+    }
+
+    private function _numRows($res){
+        return $res->rowCount();
+    }
+
+    private function _isEmpty($res){
+        if($this->_numRows($res) == 0) return true;
+        else return false;
+    }
+
+    private function _lastID(){
+        return $this->_conn->lastInsertId();
+    }
+
+    private function _free($res){
+        $res->closeCursor();
+    }
+
+
+    private function _prepare($sample,$args){
+        $rpNum = 0;
+        $phNum = count($args);
+        // :n - names, :d - digits, :s - string, :b - boolean, :i - array set for insert, :u - array set for update, :p - part of statement
+        $prepared = preg_replace_callback('|(\:[bundisp])|',function($match) use(&$args,&$rpNum) { 
+            $dirtyVal = array_shift($args);
+            $clearVal = $this->_getClearValue($match[1],$dirtyVal);
+            if(!$clearVal) return false;
+            $rpNum++;
+            return $clearVal;
+        },$sample);
+
+        if($rpNum != $phNum) $this->_error("Number of args is not equal number of placeholders in [$sample]");
+        return $prepared;
+    }
+
+    private function _getClearValue($placeholder,$value){
+        switch($placeholder){
+            case ':n':
+                return $this->_clearName($value);
+            break;
+
+            case ':d':
+                return $this->_clearDigit($value);
+            break;
+            
+            case ':s':
+                return $this->_clearString($value);
+            break;
+
+            case ':b':
+                return $this->_clearBool($value);
+            break;
+
+            case ':i':
+                return $this->_makeInsert($value);
+            break;
+
+            case ':u':
+                return $this->_makeUpdate($value);
+            break;
+
+            case ':p':
+                return $this->_makePart($value);
+            break;
+
+            default:
+                $this->_error("Unknown placeholder <$placeholder>");
+            break;
+        }
+    }
+
+    private function _clearName($value){
+        if(!is_array($value)){
+            if(empty($value)) $this->_error("Empty value for <:n> placeholder");
+            $value = array($value);
+        }
+        $names = array();
+        foreach($value as $v){
+            $v = str_replace("`","``",$v);
+            $names[] = "`$v`";
+        }
+
+        return join(',',$names);
+    }
+
+    private function _clearDigit($value){
+		if ($value === NULL) return 'NULL';
+		if(!is_numeric($value)) $this->_error("Got non numeric value for <:d> placeholder");
+		if (is_float($value)) $value = number_format($value, 0, '.', '');
+		return $value;
+    }
+    
+    private function _clearString($value){
+        if ($value === NULL) return 'NULL';
+		return $this->_conn->quote($value);
+    }
+
+    private function _clearBool($value){
+        if ($value === NULL) return 'NULL';
+        if(!is_bool($value)) $this->_error("Got non boolean value for <:b> placeholder");
+        if ($value === true) return 1; 
+        return 'NULL';
+    }
+
+    private function _makeInsert($value){
+        if(!is_array($value)) $this->_error("Got non array value for <:i> placeholder");
+        if(!isset($value[0])) $value = array($value);
+        $left = array();
+        $right = array();
+        $i=0;
+        foreach($value as $set){
+            $part = array();
+            foreach($set as $k=>$v){
+                if($i==0) $left[] = $this->_clearName($k);
+
+                if(is_numeric($v))
+                    $part[] = $this->_clearDigit($v);
+                elseif(is_bool($v))
+                    $part[] = $this->_clearBool($v);
+                else
+                    $part[] = $this->_clearString($v);
+
+            }
+
+            if(count($left) != count($part)) $this->_error("Got array with different numbers of items");
+            $right[] = '('.join(',',$part).')';
+            $i++;
+        }
+        return '('.join(',',$left).') VALUES '.join(',',$right);
+    }
+
+    private function _makeUpdate($value){
+        if(!is_array($value)) $this->_error("Got non array value for <:i> placeholder");
+        $set=array();
+        foreach($value as $k=>$v){
+            $key = $this->_clearName($k);
+
+            if(is_numeric($v))
+                $val = $this->_clearDigit($v);
+            elseif(is_bool($v))
+                $val = $this->_clearBool($v);
+            else
+                $val = $this->_clearString($v);
+
+            $set[] = "$key=$val";
+ 
+        }
+   
+        return 'SET '.join(',',$set);
+    }
+
+    private function _makePart($value){
+        if(!$value instanceof DBPart) $this->_error("Got non Part value for <:p> placeholder");
+        return $value->Part;
+    }
+}
+
+class DBPart{
+    public $Part;
+    public function __construct($part=''){
+        $this->Part = $part;
     }
 }
