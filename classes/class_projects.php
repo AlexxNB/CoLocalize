@@ -168,6 +168,11 @@ class Terms{
 
     public function GetList(){
         $db = new DB();
+        return $db->GetArray("SELECT * FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
+    }
+
+    public function Find(){
+        $db = new DB();
 
         $query = false;
         $start=0;
@@ -235,11 +240,22 @@ class Terms{
         $num = count($this->TermsQueue);
         if($num == 0) return false;
         
+        if($list = $this->GetList()){
+            foreach($list as $term){
+                $key = array_search($term->name,$this->TermsQueue);
+                if($key === false) continue;
+                
+                unset($this->TermsQueue[$key]);
+                $num--;
+            }
+        }
+        if($num == 0) return false;
+
         $props = array();
-        foreach($this->TermsQueue as $term){
+        foreach($this->TermsQueue as $name){
             $props[] = array(
                 'projectid'=>$this->Project->ID,
-                'term'=>$term
+                'name'=>$name
             );
         }
         $db->Query("INSERT INTO :n :i",'terms',$props);
