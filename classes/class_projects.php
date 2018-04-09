@@ -3,10 +3,10 @@ require_once("class_db.php");
 class Projects{
     public function GetUserProjects($User){
         $db = new DB();
-        if(!$list = $db->SelectInArray('projects_users',"userid=$User->ID")) return false;
+        if(!$list = $db->GetArray("SELECT :n FROM :n WHERE :n=:d",'projectid','projects_users','userid',$User->ID)) return false;
         $prList=array();
         foreach($list as $line){
-            if(!$p = $this->GetProject($line['projectid'])) continue;
+            if(!$p = $this->GetProject($line->projectid)) continue;
             $prList[]=$p;
         }
         return $prList;
@@ -14,14 +14,14 @@ class Projects{
 
     public function GetProject($projectid){
         $db = new DB();
-        if(!$projectDB = $db->SelectRow('projects',"id=$projectid")) return false;
-        return $this->_makeProjectObj($projectDB);
+        if(!$ProjectDB = $db->GetRow("SELECT * FROM :n WHERE :n=:d",'projects','id',$projectid)) return false;
+        return $this->_makeProjectObj($ProjectDB);
     }
 
     public function GetProjectByCode($code){
         $db = new DB();
-        if(!$project = $db->SelectRow('projects',"public_link='$code'")) return false;
-        return $this->_makeProjectObj($projectDB);
+        if(!$ProjectDB = $db->GetRow("SELECT * FROM :n WHERE :n=:s",'projects','public_link',$code)) return false;
+        return $this->_makeProjectObj($ProjectDB);
     }
 
     public function CreateProject($title,$descr,$Creator){
@@ -29,23 +29,24 @@ class Projects{
         $prop = array(
             "title"=>$title,
             "descr"=>$descr,
-            "is_public"=>0,
+            "is_public"=>false,
             "public_link"=>'',
-            "terms"=>0,
             "creator"=>$Creator->ID
         );
-        if(!$pid = $db->Insert('projects',$prop)) return false;
-        $prop["id"] = $pid;
+        $db->Query("INSERT INTO :n :i",'projects',$prop);
+        $prop["id"] = $db->LastID();
         return $this->_makeProjectObj($prop);
     }
 
-    private function _makeProjectObj($data){
-        $project = new Project($data['id']);
-        $project->Title = $data['title'];
-        $project->Descr = $data['descr'];
-        $project->IsPublic = ($data['is_public']==1) ? true : false;
-        $project->PublicLink = $data['public_link'];
-        $project->Creator = $data['creator'];
+    private function _makeProjectObj($dataDB){
+        if(is_array($dataDB)) $dataDB = json_decode(json_encode($dataDB), FALSE);
+        
+        $project = new Project($dataDB->id);
+        $project->Title = $dataDB->title;
+        $project->Descr = $dataDB->descr;
+        $project->IsPublic = ($dataDB->is_public) ? true : false;
+        $project->PublicLink = $dataDB->public_link;
+        $project->Creator = $dataDB->creator;
 
         return $project;
     }
@@ -73,25 +74,33 @@ class Project{
             "title"=>$title,
             "descr"=>$descr
         );
-        return $db->Update('projects',$prop,"id=$this->ID");
+        return $db->Query("UPDATE :n :u WHERE :n=:d",'projects',$prop,'id',$this->ID);
     }
 
     public function GetUserRole($User){
         $db = new DB();
-        return $db->SelectCell('projects_users','role',"projectid=$this->ID AND userid=$User->ID");
+        return $db->GetCell("SELECT :n FROM :n WHERE :n=:d AND :n=:d",
+                                'role','projects_users',
+                                'projectid',$this->ID,
+                                'userid',$User->ID
+                            );
     }
 
     public function SetUserRole($User,$role){
         $db = new DB();
         if($this->GetUserRole($User)){
-            $db->Update('projects_users',array('role'=>$role),"projectid=$this->ID AND userid=$User->ID");
+            $db->Query("UPDATE :n :u WHERE :n=:d AND :n=:d",
+                        'projects_users',array('role'=>$role),
+                        'projectid',$this->ID,
+                        'userid',$User->ID
+                    );
         }else{
             $prop = array(
                 "projectid"=>$this->ID,
                 "userid"=>$User->ID,
                 "role"=>$role
             );
-            $db->Insert('projects_users',$prop);
+            $db->Query("INSERT INTO :n :i",'projects_users',$prop);
         }
     }
 
@@ -124,26 +133,27 @@ class Project{
 
     public function DeleteProject(){
         $db = new DB();
-        if(!$db->Delete('projects',"id=$this->ID")) return false;
-        if(!$db->Delete('projects_users',"projectid=$this->ID")) return false;
+        $db->Query("DELETE FROM :n WHERE :n=:d",'projects','id',$this->ID);
+        $db->Query("DELETE FROM :n WHERE :n=:d",'projects_users','projectid',$this->ID);
+        $this->Terms-> DeleteAllTerms();
         return true;
     }
 
     public function MakePublic($code){
         $db = new DB();
         $prop = array(
-            'is_public'=>1,
+            'is_public'=>true,
             'public_link'=>$code
         );
-        $db->Update('projects',$prop,"id=$this->ID");
+        $db->Query("UPDATE :n :u WHERE :n=:d",'projects',$prop,'id',$this->ID);
     }
 
     public function MakePrivate(){
         $db = new DB();
         $prop = array(
-            'is_public'=>0
+            'is_public'=>false
         );
-        $db->Update('projects',$prop,"id=$this->ID");
+        $db->Query("UPDATE :n :u WHERE :n=:d",'projects',$prop,'id',$this->ID);
     }
 }
 
@@ -213,7 +223,7 @@ class Terms{
 
     public function Num(){
         $db = new DB();
-        return $db->SelectNum('terms','projectid='.$this->Project->ID);
+        return $db->GetCell("SELECT COUNT(1) FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
     }
 
     public function AddQueue($term){
@@ -232,8 +242,12 @@ class Terms{
                 'term'=>$term
             );
         }
+        $db->Query("INSERT INTO :n :i",'terms',$props);
+    }
 
-        if(!$db->Insert('terms',$props,true)) return false;
+    public function DeleteAllTerms(){
+        $db = new DB();
+        $db->Query("DELETE FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
     }
 }
 ?>
