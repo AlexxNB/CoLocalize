@@ -31,8 +31,10 @@ class Auth
             'password'=>md5($password),
 			'name'=>$name,
 			'privs'=>'[]'
-        );
-		if(!$uid = $db->Insert('users',$user)) return false;
+		);
+
+		$db->Query("INSERT INTO :n :i",'users',$user);
+		$uid = $db->LastID();
 		$user['id']=$uid;
 		return $this->_makeUserObj($user);
 	}
@@ -64,39 +66,41 @@ class Auth
   
 
 	public function GetUser(){
-		$db = new DB();
 		$utils = new Utils();
 
 		if($utils->IsGlobal('auth_user')) return $utils->GetGlobal('auth_user');
 
 		if(!$this->IsAuthed()) return $utils->SetGlobal('auth_user',false);
-		$user = $db->SelectRow('users','id='.$_SESSION['userid']);
-		if($user) $user = $this->_makeUserObj($user);
-		return $utils->SetGlobal('auth_user',$user);
+
+		$User = $this->GetUserById($_SESSION['userid']);
+		return $utils->SetGlobal('auth_user',$User);
 	}
    
 	public function GetUserById($userid){
 		$db = new DB();
 		$utils = new Utils();
 		if($utils->IsGlobal('auth_user_'.$userid)) return $utils->GetGlobal('auth_user_'.$userid);
-		$user =  $db->SelectRow('users','id='.$userid);
-		if($user) $user = $this->_makeUserObj($user);
-		return $utils->SetGlobal('auth_user_'.$userid,$user);
+
+		$userDB = $db->GetRow("SELECT * FROM :n WHERE :n=:d",'users','id',$userid);
+		if($userDB) $User = $this->_makeUserObj($userDB);
+		return $utils->SetGlobal('auth_user_'.$userid,$User);
 	}
 
 	public function GetUserByEmail($email){
 		$db = new DB();
-		if(!$user = $db->selectRow("users","email='$email'")) return false;
-		return $user = $this->_makeUserObj($user);
+		if(!$userDB = $db->GetRow("SELECT * FROM :n WHERE :n=:s",'users','email',$email)) return false;
+		return $this->_makeUserObj($userDB);
 	}
   
-	private function _makeUserObj($data){
+	private function _makeUserObj($dataDB){
+		if(is_array($dataDB)) $dataDB = json_decode(json_encode($dataDB), FALSE);
+
 		$User = new User();
-		$User->ID = $data['id'];
-		$User->Email = $data['email'];
-		$User->PassHash = $data['password'];
-		$User->Name = $data['name'];
-		if($privs = json_decode($data['privs'],true)) 
+		$User->ID = $dataDB->id;
+		$User->Email = $dataDB->email;
+		$User->PassHash = $dataDB->password;
+		$User->Name = $dataDB->name;
+		if($privs = json_decode($dataDB->privs,true)) 
 			$User->Privs=$privs;
 		else
 			$User->Privs=array();
@@ -140,14 +144,14 @@ class User{
 		if(in_array($priv,$this->Privs)) return false;
 		$this->Privs[]=$priv;
 		$db = new DB();
-		$db->Update('users', array('privs'=>json_encode($this->Privs)), "id=$this->ID");
+		$db->Query("UPDATE :n :u WHERE id=:d",'users',array('privs'=>json_encode($this->Privs)),$this->ID);
 	}
 
 	public function RemovePriv($priv){
 		if(!in_array($priv,$this->Privs)) return false;
 		unset($this->Privs[array_search($priv,$this->Privs)]);
 		$db = new DB();
-		$db->Update('users', array('privs'=>json_encode($this->Privs)), "id=$this->ID");
+		$db->Query("UPDATE :n :u WHERE id=:d",'users',array('privs'=>json_encode($this->Privs)),$this->ID);
   	}
 }
 ?>

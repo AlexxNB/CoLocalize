@@ -74,6 +74,10 @@ class DB{
         return new DBPart($query);
     }
 
+    public function LastID(){
+        return $this->_lastID();
+    }
+
     private function _loadConfig(){
         require(dirname(__FILE__)."/../_config.php");
         $this->_host = $server;
