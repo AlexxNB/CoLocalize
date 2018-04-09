@@ -9,13 +9,16 @@ class DB{
     private $_database;
     private $_port;
     private $_conn;
+    private $_parser;
 
     public function __construct(){ 
-        $this->_loadConfig();
-        $pdo_mysql = 'mysql:host='. $this->_host .';dbname='. $this->_database .';port='. $this->_port;
+        $this->_parser = new DBParser(self::DEBUG);
 
         if(!isset($GLOBALS['DBConnected']))
         {
+            $this->_loadConfig();
+            $pdo_mysql = 'mysql:host='. $this->_host .';dbname='. $this->_database .';port='. $this->_port;
+
             $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_EMULATE_PREPARES   => false,
@@ -67,11 +70,7 @@ class DB{
     }
 
     public function Part(){
-        $args = func_get_args();
-        if(count($args) == 0) $this->_error("Require at least one argument");
-        $sample = array_shift($args);
-        $query = $this->_prepare($sample,$args);
-        return new DBPart($query);
+        return new DBPart(self::DEBUG);
     }
 
     public function LastID(){
@@ -99,10 +98,7 @@ class DB{
     }
 
     private function _query($args){
-        if(count($args) == 0) $this->_error("Require at least one argument");
-        $sample = array_shift($args);
-        $query = $this->_prepare($sample,$args);
-        return $this->_execute($query);
+        return $this->_execute($this->_prepare($args));
     }
 
     private function _execute($query){
@@ -142,20 +138,54 @@ class DB{
     }
 
 
-    private function _prepare($sample,$args){
+    private function _prepare($args){
+        return $this->_parser->Parse($args);
+    }
+
+    
+}
+
+class DBParser{
+    private $_DEBUG;
+    private $_lastSample;
+
+    public function __construct($debug=false){
+        $this->_DEBUG = $debug;
+        $this->_lastSample = false;
+    }
+
+    public function Parse($args){
+   
+        if(count($args) == 0) $this->_error("Require at least one argument");
+        $sample = array_shift($args);
+        $this->_lastSample = $sample;
         $rpNum = 0;
         $phNum = count($args);
         // :n - names, :d - digits, :s - string, :b - boolean, :i - array set for insert, :u - array set for update, :p - part of statement
         $prepared = preg_replace_callback('|(\:[bundisp])|',function($match) use(&$args,&$rpNum) { 
             $dirtyVal = array_shift($args);
             $clearVal = $this->_getClearValue($match[1],$dirtyVal);
-            if(!$clearVal) return false;
             $rpNum++;
             return $clearVal;
         },$sample);
 
         if($rpNum != $phNum) $this->_error("Number of args is not equal number of placeholders in [$sample]");
         return $prepared;
+    }
+
+    private function _error($error){
+        if($this->_DEBUG){
+            echo "DBParser Error in ".debug_backtrace()[1]['function'].": ";
+            echo "\r\n";
+            echo $error;
+            if($this->_lastSample){
+                echo "\r\n";
+                echo $this->_lastSample;  
+            }
+        }else{
+            header("HTTP/1.0 500 Internal Server Error");
+        }
+        exit();
     }
 
     private function _getClearValue($placeholder,$value){
@@ -209,7 +239,7 @@ class DB{
     }
 
     private function _clearDigit($value){
-		if ($value === NULL) return 'NULL';
+        if ($value === NULL) return 'NULL';
 		if(!is_numeric($value)) $this->_error("Got non numeric value for <:d> placeholder");
 		if (is_float($value)) $value = number_format($value, 0, '.', '');
 		return $value;
@@ -276,13 +306,30 @@ class DB{
 
     private function _makePart($value){
         if(!$value instanceof DBPart) $this->_error("Got non Part value for <:p> placeholder");
-        return $value->Part;
+        return $value->Get();
     }
 }
 
 class DBPart{
-    public $Part;
-    public function __construct($part=''){
-        $this->Part = $part;
+    private $_DEBUG;
+    private $_parser;
+    private $_part;
+    
+    public function __construct($debug=false){
+        $this->_DEBUG = $debug;
+        $this->_parser = new DBParser($debug);
+        $this->_part = '';
+    }
+
+    public function Add(){
+        $this->_part .= $this->_parser->Parse(func_get_args());
+    }
+
+    public function AddBefore(){
+        $this->_part = $this->_parser->Parse(func_get_args()).$this->_part;
+    }
+
+    public function Get(){
+        return $this->_part;
     }
 }

@@ -58,7 +58,7 @@ if($api->getCommand() == 'load'){
 	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
 	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
 
-	if(!$list = $Project->Terms->GetList($query,$num,20)) $api->serverError($L['no_entries']);
+	if(!$list = $Project->Terms->Find($query,$num,20)) $api->serverError($L['no_entries']);
 
 	$api->makeJSON($list);
 }

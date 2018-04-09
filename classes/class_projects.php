@@ -209,20 +209,17 @@ class Terms{
         }
         if(empty($query)) $query=false;
 
-        $where = "projectid=".$this->Project->ID;
-        if($query) $where .= "AND term LIKE '%$query%'";
-        if($lines) $where .= " LIMIT $start,$lines";
+        $search = $db->Part();
+        $limit = $db->Part();
+        if($query) $search->Add(" AND :n LIKE :s",'name',"%$query%");
+        if($lines) $limit->Add(" LIMIT :d,:d",$start,$lines);
 
         
         $terms = array();
-        if(!$data = $db->SelectInArray('terms',$where)) return $terms;
-        foreach($data as $line){
-            $term = new stdClass();
-            $term->ID = $line['id'];
-            $term->Name = $line['term'];
-            $terms[] = $term;
-        }
-
+        if(!$terms = $db->GetArray("SELECT :n FROM :n WHERE :n=:d:p:p",
+                                    array('id','name'),'terms',
+                                    'projectid',$this->Project->ID,
+                                    $search,$limit)) return false;
         return $terms;
     }
 
@@ -244,7 +241,7 @@ class Terms{
             foreach($list as $term){
                 $key = array_search($term->name,$this->TermsQueue);
                 if($key === false) continue;
-                
+
                 unset($this->TermsQueue[$key]);
                 $num--;
             }
