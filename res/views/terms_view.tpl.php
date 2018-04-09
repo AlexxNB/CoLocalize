@@ -6,8 +6,8 @@
         <a class="btn btn-primary btn-sm" href="/terms/import/<?=$Project->ID?>/"><i class="icon-import"></i> <?=$L['terms:view:import_button']?></a>
     </div>
     <div class="input-group term-search">
-        <input type="text" class="form-input input-sm" placeholder="<?=$L['terms:view:search']?>">
-        <button class="btn btn-primary btn-sm input-group-btn"><i class="icon-search"></i></button>
+        <input type="text" class="form-input input-sm" id="search" placeholder="<?=$L['terms:view:search']?>">
+        <button class="btn btn-primary btn-sm input-group-btn" id="doSearch"><i class="icon-search"></i></button>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
         <label class="form-checkbox">
             <input type="checkbox" class="term-check">
             <i class="form-icon"></i>
-            1
+            <span class="term-num">0</span>
         </label>
     </div>
     <div class="tile-content">

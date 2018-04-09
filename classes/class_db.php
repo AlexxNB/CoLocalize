@@ -247,7 +247,7 @@ class DBParser{
     
     private function _clearString($value){
         if ($value === NULL) return 'NULL';
-		return $this->_conn->quote($value);
+        return "'".str_replace("'","\'",$value)."'";
     }
 
     private function _clearBool($value){

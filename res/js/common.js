@@ -135,3 +135,11 @@ function upload(group,command,file_data,data,success,progress){
             }
         });
 }
+
+function onScrollEnd(func){
+    $(window).scroll(function(){
+        if  ($(window).scrollTop() == $(document).height() - $(window).height()){
+           func();
+        }
+}); 
+}
