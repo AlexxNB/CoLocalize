@@ -78,7 +78,7 @@ class DB{
     }
 
     private function _loadConfig(){
-        require(dirname(__FILE__)."/../_config.php");
+        require(__DIR__."/../inc/_config.php");
         $this->_host = $server;
         $this->_user = $user;
         $this->_password = $password;

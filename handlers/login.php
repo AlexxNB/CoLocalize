@@ -1,7 +1,7 @@
 <?php
-require_once('../classes/class_restapi.php');
-require_once('../classes/class_auth.php');
-require_once('../classes/class_page.php');
+require_once('classes/class_restapi.php');
+require_once('classes/class_auth.php');
+require_once('classes/class_page.php');
 $api = new Restapi();
 $auth = new Auth();
 $page = new Page();

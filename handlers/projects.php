@@ -1,9 +1,9 @@
 <?php
-require_once('../classes/class_restapi.php');
-require_once('../classes/class_auth.php');
-require_once('../classes/class_page.php');
-require_once('../classes/class_projects.php');
-require_once('../classes/class_utils.php');
+require_once('classes/class_restapi.php');
+require_once('classes/class_auth.php');
+require_once('classes/class_page.php');
+require_once('classes/class_projects.php');
+require_once('classes/class_utils.php');
 $api = new Restapi();
 $auth = new Auth();
 $page = new Page();

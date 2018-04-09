@@ -72,7 +72,7 @@ class Page {
     }
 
     private function _preProc(){
-        require_once(__DIR__.'/../_preproc.php');
+        require_once('inc/_preproc.php');
         $list = preProc();
         foreach($list['vars'] as $name=>$content){
             $this->_tplvars[$name] = $content;
@@ -135,11 +135,6 @@ class Page {
             return $url;
     }
 
-    public function Show404(){
-        require_once(__DIR__.'/../404.php');
-        exit;
-    }
-
     private function _clearVar($var){
         $this->_rawvars[$key]=$value;
 
@@ -191,7 +186,7 @@ class View{
                 $$key = $value;
             }
         ob_start();
-        include __DIR__.'/../res/views/'.$this->_view.'.tpl.php';
+        include 'res/views/'.$this->_view.'.tpl.php';
         return ob_get_clean();
     }
 
