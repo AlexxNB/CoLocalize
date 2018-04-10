@@ -122,19 +122,24 @@
             "import_button":"Import",   
             "add_button":"Add Term",
             "search":"Search...",
+            "enter_name":"New term",
             "msg":{
                 "no_terms_found":"No terms were found",
                 "empty_value":"Can't save empty term name",
+                "empty_name":"Can't add term with empty name",
                 "save_success":"Term saved",
                 "sure_delete":"Are you sure you want to delete this term WITH ALL done translations?",
                 "delete_err":"Failed to delete this term",
-                "delete_ok":"Term was successfully deleted."
+                "delete_success":"Term was successfully deleted.",
+                "add_err":"Failed to add new term",
+                "add_success":"Term added."
             }
         }
     },
     "yes":"Yes",
     "cancel":"Cancel",
     "close":"Close",
+    "add":"Add",
     "system_error":"System Error",
     "auth_error":"Authorization Error",
     "auth_require":"Require authorization",

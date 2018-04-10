@@ -2,7 +2,7 @@
 
 <div class="mt mb">
     <div class="float-right">
-        <a class="btn btn-primary btn-sm" href="/terms/add/<?=$Project->ID?>/"><i class="icon-add"></i> <?=$L['terms:view:add_button']?></a>
+        <button class="btn btn-primary btn-sm" id="doAddTerm"><i class="icon-add"></i> <?=$L['terms:view:add_button']?></button>
         <a class="btn btn-primary btn-sm" href="/terms/import/<?=$Project->ID?>/"><i class="icon-import"></i> <?=$L['terms:view:import_button']?></a>
     </div>
     <div class="input-group term-search">
@@ -56,7 +56,27 @@
     </div>
     <div class="modal-footer">
       <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
-      <button class="btn btn-primary" id="confirmDelete" data-ok="<?=$L['terms:view:msg:delete_ok']?>" data-err="<?=$L['terms:view:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+      <button class="btn btn-primary" id="confirmDelete" data-err="<?=$L['terms:view:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-sm" id="modal-add">
+  <span class="modal-overlay modal-close" aria-label="Close"></span>
+  <div class="modal-container">
+    <div class="modal-header">
+        <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <div class="form-group">
+            <input class="form-input" type="text" id="newTermName" placeholder="<?=$L['terms:view:enter_name']?>">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
+      <button class="btn btn-primary" id="confirmAdd" data-err="<?=$L['terms:view:msg:add_err']?>"><i class="icon-add"></i> <?=$L['add']?></button>
     </div>
   </div>
 </div>

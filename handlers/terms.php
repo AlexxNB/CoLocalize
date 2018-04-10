@@ -63,6 +63,22 @@ if($api->getCommand() == 'load'){
 	$api->makeJSON($list);
 }
 
+if($api->getCommand() == 'add'){
+	$pid = $api->getParam('pid');
+	$name = $api->getParam('name');
+
+	if(empty($name)) $api->clientError($L['terms:view:msg:empty_name']);
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+
+	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
+
+	$Project->Terms->AddTerm($name);
+	$api->makeJSON($L['terms:view:msg:add_success']);
+}
+
 if($api->getCommand() == 'save'){
 	$pid = $api->getParam('pid');
 	$tid = $api->getParam('tid');
@@ -93,7 +109,7 @@ if($api->getCommand() == 'delete'){
 	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
 
 	$Project->Terms->DeleteTerm($tid);
-	$api->makeJSON('success');
+	$api->makeJSON($L['terms:view:msg:delete_success']);
 }
 
 $api->clientError('Unknown command');

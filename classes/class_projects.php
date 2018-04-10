@@ -166,6 +166,11 @@ class Terms{
         $this->TermsQueue = array();
     }
 
+    public function GetByName($name){
+        $db = new DB();
+        return $db->GetRow("SELECT * FROM :n WHERE :n=:s",'terms','name',$name);
+    }
+
     public function GetList(){
         $db = new DB();
         return $db->GetArray("SELECT * FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
@@ -256,6 +261,17 @@ class Terms{
             );
         }
         $db->Query("INSERT INTO :n :i",'terms',$props);
+    }
+
+    public function AddTerm($name){
+        if($this->GetByName($name)) return false;
+        $db = new DB();
+        $prop = array(
+                        'projectid'=>$this->Project->ID,
+                        'name'=>$name
+                    );
+        $db->Query("INSERT :n :i",'terms',$prop);
+        return true;
     }
 
     public function SaveTerm($termid,$name){

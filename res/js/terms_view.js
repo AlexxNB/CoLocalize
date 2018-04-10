@@ -1,27 +1,28 @@
 var termsnum = 0;
 var loading = false;
 var endlist = false;
-var search = '';
+var query = '';
 
 $(document).ready(function() {
     $('#doSearch').click(function(){
-        search = $('#search').val();
-        termsnum = 0;
-        endlist = false;
-        clearContainer(function(){loadTerms(search)});
+        query = $('#search').val();
+        clearContainer(function(){loadTerms()});
     });
     bindEnterKey('#search','#doSearch');
 
-    onScrollEnd(function(){
-        loadTerms(search);
+    $('#doAddTerm').click(function(){
+        var pid = $('#term-container').data('pid');
+        doAddTerm(pid);
     });
 
-    clearContainer(function(){loadTerms(search)});
+    onScrollEnd(function(){
+        loadTerms();
+    });
+
+    clearContainer(function(){loadTerms()});
 });
 
-function loadTerms(query){
-    query = query || '';
-
+function loadTerms(){
     if(loading || endlist) return false;
 
     var cont = $('#term-container');
@@ -96,6 +97,8 @@ function saveTerm(tid,pid,newVal,oldVal){
 }
 
 function clearContainer(func){
+    termsnum = 0;
+    endlist = false;
     var cont = $('#term-container');
     cont.slideUp(function(){
         cont.html('');
@@ -123,7 +126,7 @@ function doDeleteTerm(tid,pid){
 		getJSON('terms','delete',{pid:pid,tid:tid},function(resp) {
 			if(resp.status == 200){
 				removeFromList(tid);
-				showToast(button.data('ok'),{type:'success'});
+				showToast(resp.data,{type:'success'});
 			}else{
 				showToast(button.data('err'),{type:'error'});
 			}
@@ -144,4 +147,33 @@ function removeFromList(tid){
             i++;
         });
     });
+}
+
+function doAddTerm(pid){
+	var button = $('#confirmAdd');
+	var modal = $('#modal-add');
+    var input = $('#newTermName');
+    
+    modal.addClass('active');
+    input.focus();
+
+	button.off();
+	button.click(function(){
+        startLoading(button);
+        var name = input.val();
+		getJSON('terms','add',{pid:pid,name:name},function(resp) {
+			if(resp.status == 200){
+                showToast(resp.data,{type:'success'});
+                query = name;
+                $('#search').val(query);
+                clearContainer(function(){loadTerms()});
+			}else{
+				showToast(resp.error,{type:'error'});
+			}
+			stopLoading(button);
+			modal.removeClass('active');
+		});
+    });
+    
+    bindEnterKey('#newTermName','#confirmAdd');
 }
