@@ -161,8 +161,8 @@ class DBParser{
         $this->_lastSample = $sample;
         $rpNum = 0;
         $phNum = count($args);
-        // :n - names, :d - digits, :s - string, :b - boolean, :i - array set for insert, :u - array set for update, :p - part of statement
-        $prepared = preg_replace_callback('|(\:[bundisp])|',function($match) use(&$args,&$rpNum) { 
+        // :n - names, :d - digits, :s - string, :b - boolean, :l -list for in, :i - array set for insert, :u - array set for update, :p - part of statement
+        $prepared = preg_replace_callback('|(\:[bundispl])|',function($match) use(&$args,&$rpNum) { 
             $dirtyVal = array_shift($args);
             $clearVal = $this->_getClearValue($match[1],$dirtyVal);
             $rpNum++;
@@ -204,6 +204,10 @@ class DBParser{
 
             case ':b':
                 return $this->_clearBool($value);
+            break;
+
+            case ':l':
+                return $this->_makeList($value);
             break;
 
             case ':i':
@@ -255,6 +259,24 @@ class DBParser{
         if(!is_bool($value)) $this->_error("Got non boolean value for <:b> placeholder");
         if ($value === true) return 1; 
         return 'NULL';
+    }
+
+    private function _makeList($value){
+        if(!is_array($value)) $this->_error("Got non array value for <:l> placeholder");
+        $list=array();
+        foreach($value as $v){
+            if(is_numeric($v))
+                $val = $this->_clearDigit($v);
+            elseif(is_bool($v))
+                $val = $this->_clearBool($v);
+            else
+                $val = $this->_clearString($v);
+
+            $list[] = $val;
+ 
+        }
+   
+        return "(".join(',',$list).")";
     }
 
     private function _makeInsert($value){
