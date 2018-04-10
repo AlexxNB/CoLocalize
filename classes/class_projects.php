@@ -285,6 +285,12 @@ class Terms{
         $db->Query("DELETE FROM :n WHERE :n=:d",'terms','id',$termid);
     }
 
+    public function DeleteTerms($termids){
+        if(!is_array($termids)) return false;
+        $db = new DB();
+        $db->Query("DELETE FROM :n WHERE :n IN :l",'terms','id',$termids);
+    }
+
     public function DeleteAllTerms(){
         $db = new DB();
         $db->Query("DELETE FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);

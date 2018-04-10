@@ -127,10 +127,14 @@
                 "no_terms_found":"No terms were found",
                 "empty_value":"Can't save empty term name",
                 "empty_name":"Can't add term with empty name",
+                "already_exists":"Term as already exists",
                 "save_success":"Term saved",
                 "sure_delete":"Are you sure you want to delete this term WITH ALL done translations?",
+                "sure_delete_selected":"Are you sure you want to delete selected terms WITH ALL done translations?",
                 "delete_err":"Failed to delete this term",
+                "delete_selected_err":"Failed to delete terms",
                 "delete_success":"Term was successfully deleted.",
+                "delete_selected_success":"Terms were successfully deleted.",
                 "add_err":"Failed to add new term",
                 "add_success":"Term added."
             }

@@ -75,7 +75,7 @@ if($api->getCommand() == 'add'){
 	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
 	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
 
-	$Project->Terms->AddTerm($name);
+	if(!$Project->Terms->AddTerm($name)) $api->serverError($L['terms:view:msg:already_exists']);
 	$api->makeJSON($L['terms:view:msg:add_success']);
 }
 
@@ -112,5 +112,19 @@ if($api->getCommand() == 'delete'){
 	$api->makeJSON($L['terms:view:msg:delete_success']);
 }
 
+if($api->getCommand() == 'deleteselected'){
+	$pid = $api->getParam('pid');
+	$list = $api->getJSONParam('list');
+	if(!$list) $api->clientError($L['system_error']);
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+
+	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
+
+	$Project->Terms->DeleteTerms($list);
+	$api->makeJSON($L['terms:view:msg:delete_selected_success']);
+}
 $api->clientError('Unknown command');
 ?>

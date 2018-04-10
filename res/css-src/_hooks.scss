@@ -46,9 +46,14 @@
     margin-bottom: 10px;
 }
 
-.btn, a{
-    transition: all 0.3s ease;
+.btn{
+    transition: background 0.3s ease;
 }
+
+a{
+    transition: color 0.3s ease;
+}
+
 
 h1,h2,h3,h4,h5{
     span{

@@ -11,8 +11,12 @@ $(document).ready(function() {
     bindEnterKey('#search','#doSearch');
 
     $('#doAddTerm').click(function(){
-        var pid = $('#term-container').data('pid');
-        doAddTerm(pid);
+        doAddTerm();
+    });
+    bindEnterKey('#newTermName','#confirmAdd');
+
+    $('#doDeleteSelected').click(function(){
+        doDeleteSelected();
     });
 
     onScrollEnd(function(){
@@ -36,7 +40,10 @@ function loadTerms(){
     getJSON('terms','load',{query:query,num:termsnum,pid:pid},function(resp) {
         stopLoading(listpart);
 		if(resp.status != 200){
-            if(termsnum == 0) showToast(resp.error,{type:'error'});
+            if(termsnum == 0) {
+                showToast(resp.error,{type:'error'});
+                showEmpty();
+            }
             endlist=true;
             loading=false;
             return false;
@@ -55,6 +62,7 @@ function loadTerms(){
             var input = tile.find(".term-input");
             var num = tile.find(".term-num");
             var delBut = tile.find(".doDeleteTerm");
+            var check = tile.find('.term-check');
             tile.prop('id','tid-'+term.id);
             num.text(termsnum);
             cont.append(tile);
@@ -74,6 +82,11 @@ function loadTerms(){
 
             delBut.click(function(){
                 doDeleteTerm(term.id,pid)
+            });
+
+            check.data('tid',term.id);
+            check.change(function(){
+                toggleDelButton();
             });
         });
         loading = false;
@@ -137,27 +150,35 @@ function doDeleteTerm(tid,pid){
 }
 
 function removeFromList(tid){
-	var tile = $("#tid-"+tid);
+    var tile = $("#tid-"+tid);
+    termsnum--;
 	tile.slideUp(500,function(){
         tile.remove();
-        termsnum--;
-        var i = 1;
-        $('.term-num').each(function(){
-            $(this).text(i);
-            i++;
-        });
+        if(termsnum == 0){
+            clearContainer(function(){showEmpty()});
+        }else{
+            var i = 1;
+            $('.term-num').each(function(){
+                $(this).text(i);
+                i++;
+            });
+
+            if(termsnum < 20){loadTerms();}
+        }
     });
 }
 
-function doAddTerm(pid){
+function doAddTerm(){
 	var button = $('#confirmAdd');
 	var modal = $('#modal-add');
     var input = $('#newTermName');
-    
+    var pid = $('#term-container').data('pid');
+
     modal.addClass('active');
+    input.val('');
     input.focus();
 
-	button.off();
+    button.off();
 	button.click(function(){
         startLoading(button);
         var name = input.val();
@@ -174,6 +195,48 @@ function doAddTerm(pid){
 			modal.removeClass('active');
 		});
     });
-    
-    bindEnterKey('#newTermName','#confirmAdd');
+}
+
+function toggleDelButton(){
+    var button = $('#doDeleteSelected');
+    if($(".term-check:checked").length > 0)  
+        button.fadeIn(400);
+    else
+        button.fadeOut(400);
+}
+
+function doDeleteSelected(){
+    var checked = $(".term-check:checked");
+    if(checked.length == 0) return false;
+
+	var button = $('#confirmDeleteSelected');
+	var delButton = $('#doDeleteSelected');
+    var modal = $('#modal-delete-selected');
+    var pid = $('#term-container').data('pid');
+    var list = [];
+
+    checked.each(function(){
+        list.push($(this).data('tid'));
+    });
+
+	modal.addClass('active');
+	
+	button.off();
+	button.click(function(){
+		startLoading(button);
+		getJSON('terms','deleteselected',{pid:pid,list:JSON.stringify(list)},function(resp) {
+			if(resp.status == 200){
+                $.each(list,function(k,tid){
+                    removeFromList(tid);
+                });
+				
+				showToast(resp.data,{type:'success'});
+			}else{
+				showToast(button.data('err'),{type:'error'});
+			}
+            stopLoading(button);
+            delButton.fadeOut(400);
+			modal.removeClass('active');
+		});
+	});
 }
