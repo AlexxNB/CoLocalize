@@ -53,31 +53,35 @@ function loadTerms(query){
             var tile = $('#tile-sample').clone();
             var input = tile.find(".term-input");
             var num = tile.find(".term-num");
+            var delBut = tile.find(".doDeleteTerm");
             tile.prop('id','tid-'+term.id);
-            input.val(term.name);
-            input.prop('tabindex',termsnum);
             num.text(termsnum);
             cont.append(tile);
             tile.removeClass('hide');
 
-            var inVal = input.val();
+            input.val(term.name);
+            input.prop('tabindex',termsnum);
+            var inVal = term.name;
             input.focusin(function(){
                 inVal = $(this).val();
             });
             input.focusout(function(){
                 var outVal = $(this).val();
                 if(inVal == outVal) return false;
-                saveTerm(term.id,outVal,inVal);
+                saveTerm(term.id,pid,outVal,inVal);
+            });
+
+            delBut.click(function(){
+                doDeleteTerm(term.id,pid)
             });
         });
         loading = false;
 	});
 }
 
-function saveTerm(tid,newVal,oldVal){
+function saveTerm(tid,pid,newVal,oldVal){
     var cont = $('#term-container');
     var loading = $('#tid-'+tid).find('.loading');
-    var pid = cont.data('pid');
    
     loading.removeClass('hide');
     getJSON('terms','save',{tid:tid,value:newVal,pid:pid},function(resp) {
@@ -105,4 +109,39 @@ function showEmpty(){
     var cont = $('#term-container');
     cont.append(empty);
     empty.slideDown();
+}
+
+function doDeleteTerm(tid,pid){
+	var button = $('#confirmDelete');
+	var modal = $('#modal-delete');
+
+	modal.addClass('active');
+	
+	button.off();
+	button.click(function(){
+		startLoading(button);
+		getJSON('terms','delete',{pid:pid,tid:tid},function(resp) {
+			if(resp.status == 200){
+				removeFromList(tid);
+				showToast(button.data('ok'),{type:'success'});
+			}else{
+				showToast(button.data('err'),{type:'error'});
+			}
+			stopLoading(button);
+			modal.removeClass('active');
+		});
+	});
+}
+
+function removeFromList(tid){
+	var tile = $("#tid-"+tid);
+	tile.slideUp(500,function(){
+        tile.remove();
+        termsnum--;
+        var i = 1;
+        $('.term-num').each(function(){
+            $(this).text(i);
+            i++;
+        });
+    });
 }

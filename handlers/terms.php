@@ -81,5 +81,20 @@ if($api->getCommand() == 'save'){
 	$api->makeJSON($L['terms:view:msg:save_success']);
 }
 
+if($api->getCommand() == 'delete'){
+	$pid = $api->getParam('pid');
+	$tid = $api->getParam('tid');
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+
+	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
+	if(!preg_match('|^\d+$|',$tid))	$api->clientError($L['system_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
+
+	$Project->Terms->DeleteTerm($tid);
+	$api->makeJSON('success');
+}
+
 $api->clientError('Unknown command');
 ?>

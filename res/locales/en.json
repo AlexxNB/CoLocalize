@@ -125,7 +125,10 @@
             "msg":{
                 "no_terms_found":"No terms were found",
                 "empty_value":"Can't save empty term name",
-                "save_success":"Term saved"
+                "save_success":"Term saved",
+                "sure_delete":"Are you sure you want to delete this term WITH ALL done translations?",
+                "delete_err":"Failed to delete this term",
+                "delete_ok":"Term was successfully deleted."
             }
         }
     },

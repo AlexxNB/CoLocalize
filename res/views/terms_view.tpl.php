@@ -42,3 +42,21 @@
         <button class="btn btn-sm doDeleteTerm"><i class="icon-delete"></i></button>
     </div>
 </div>
+
+<div class="modal modal-sm" id="modal-delete">
+  <span class="modal-overlay modal-close" aria-label="Close"></span>
+  <div class="modal-container">
+    <div class="modal-header">
+        <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <?=$L['terms:view:msg:sure_delete']?>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
+      <button class="btn btn-primary" id="confirmDelete" data-ok="<?=$L['terms:view:msg:delete_ok']?>" data-err="<?=$L['terms:view:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+    </div>
+  </div>
+</div>

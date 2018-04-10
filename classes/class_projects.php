@@ -264,6 +264,11 @@ class Terms{
         $db->Query("UPDATE :n :u WHERE :n=:d",'terms',$prop,'id',$termid);
     }
 
+    public function DeleteTerm($termid){
+        $db = new DB();
+        $db->Query("DELETE FROM :n WHERE :n=:d",'terms','id',$termid);
+    }
+
     public function DeleteAllTerms(){
         $db = new DB();
         $db->Query("DELETE FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
