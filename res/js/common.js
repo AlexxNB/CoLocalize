@@ -24,11 +24,25 @@ function bindEnterKey($keypressed,$to_click){
     });
 }
 
+function bindKey(obj,code,func){
+    obj = validJQ(obj);
+    obj.keydown(function(e){
+        if(e.keyCode==code){
+            func();
+        }
+    });
+}
+
 function exists(id){
     if($(id).length > 0)
         return true;
     else
         return false;
+}
+
+function validJQ(obj){
+    if(isJQObject(obj)) return obj;
+    return $(obj);
 }
 
 function isJQObject(obj){

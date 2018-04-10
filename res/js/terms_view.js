@@ -53,14 +53,42 @@ function loadTerms(query){
             var tile = $('#tile-sample').clone();
             var input = tile.find(".term-input");
             var num = tile.find(".term-num");
-            tile.data('tid',term.id);
+            tile.prop('id','tid-'+term.id);
             input.val(term.name);
+            input.prop('tabindex',termsnum);
             num.text(termsnum);
             cont.append(tile);
             tile.removeClass('hide');
+
+            var inVal = input.val();
+            input.focusin(function(){
+                inVal = $(this).val();
+            });
+            input.focusout(function(){
+                var outVal = $(this).val();
+                if(inVal == outVal) return false;
+                saveTerm(term.id,outVal,inVal);
+            });
         });
-        loading =false;
+        loading = false;
 	});
+}
+
+function saveTerm(tid,newVal,oldVal){
+    var cont = $('#term-container');
+    var loading = $('#tid-'+tid).find('.loading');
+    var pid = cont.data('pid');
+   
+    loading.removeClass('hide');
+    getJSON('terms','save',{tid:tid,value:newVal,pid:pid},function(resp) {
+        loading.addClass('hide');
+        if(resp.status == 200){
+            showToast(resp.data,{type:'success'});
+        }else{
+            showToast(resp.error,{type:'error'});
+            $('#tid-'+tid).find('.term-input').val(oldVal);
+        }
+    });  
 }
 
 function clearContainer(func){

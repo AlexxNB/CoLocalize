@@ -63,5 +63,23 @@ if($api->getCommand() == 'load'){
 	$api->makeJSON($list);
 }
 
+if($api->getCommand() == 'save'){
+	$pid = $api->getParam('pid');
+	$tid = $api->getParam('tid');
+	$value = $api->getParam('value');
+
+	if(empty($value)) $api->clientError($L['terms:view:msg:empty_value']);
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+
+	if(!preg_match('|^\d+$|',$pid))	$api->clientError($L['system_error']);
+	if(!preg_match('|^\d+$|',$tid))	$api->clientError($L['system_error']);
+	if(!$Project = $prj->GetProject($pid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'edit_terms')) $api->serverError($L['auth_error']);
+
+	$Project->Terms->SaveTerm($tid,$value);
+	$api->makeJSON($L['terms:view:msg:save_success']);
+}
+
 $api->clientError('Unknown command');
 ?>

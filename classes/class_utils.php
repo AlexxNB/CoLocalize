@@ -19,11 +19,6 @@ class Utils{
         unset($GLOBALS['myglobals'][$name]);
     }
 
-    public function Hash($string){
-		require(dirname(__FILE__)."/../_config.php");
-		return md5($hash.$string);
-    }
-
     public function GetHostURL()
     {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";

@@ -7,7 +7,5 @@ $headers = array(
     "X-Content-Type-Options: nosniff"
 );
 
-foreach($headers as $h){
-    header($h);
-}
+foreach($headers as $h){header($h);}
 ?>

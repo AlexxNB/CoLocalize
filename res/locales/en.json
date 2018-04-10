@@ -123,7 +123,9 @@
             "add_button":"Add Term",
             "search":"Search...",
             "msg":{
-                "no_terms_found":"No terms were found"   
+                "no_terms_found":"No terms were found",
+                "empty_value":"Can't save empty term name",
+                "save_success":"Term saved"
             }
         }
     },

@@ -258,6 +258,12 @@ class Terms{
         $db->Query("INSERT INTO :n :i",'terms',$props);
     }
 
+    public function SaveTerm($termid,$name){
+        $db = new DB();
+        $prop = array('name'=>$name);
+        $db->Query("UPDATE :n :u WHERE :n=:d",'terms',$prop,'id',$termid);
+    }
+
     public function DeleteAllTerms(){
         $db = new DB();
         $db->Query("DELETE FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);

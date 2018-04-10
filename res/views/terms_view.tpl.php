@@ -33,8 +33,9 @@
         </label>
     </div>
     <div class="tile-content">
-        <div class="form-group">
-            <input class="form-input input-sm term-input" type="text" value="">
+        <div class="form-group has-icon-right">
+            <input class="form-input input-sm term-input" type="text" value="" data-num="0">
+            <i class="form-icon loading hide"></i>
         </div>
     </div>
     <div class="tile-action">
