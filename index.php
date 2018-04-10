@@ -1,6 +1,7 @@
 <?php
 define('ROOT',$_SERVER['DOCUMENT_ROOT']);
 set_include_path(ROOT);
+require_once("inc/_headers.php");
 require_once("classes/class_page.php");
 
 $page = new Page();
