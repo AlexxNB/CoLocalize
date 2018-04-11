@@ -168,6 +168,7 @@ class Page {
 
 
 class View{
+    const MINIFY = true;
     private $_view;
     private $_vars;
 
@@ -187,11 +188,25 @@ class View{
             }
         ob_start();
         include 'res/views/'.$this->_view.'.tpl.php';
-        return ob_get_clean();
+        return $this->_minify(ob_get_clean());
     }
 
     public function Render(){
         echo $this->HTML();
     }    
+
+    private function _minify($html){
+        return preg_replace(
+            array(
+                '/\s{2,}/',
+                '/<!--.*?-->/s'
+            ),
+            array(
+                ' ',
+                ''
+            ),
+            $html
+        );
+    }
 }
 ?>
