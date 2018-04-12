@@ -6,6 +6,14 @@ function getJSON(group,command,data,func){
         });
 }
 
+function getURL(part){
+    var url = window.location.pathname;
+    if(part == undefined) return url;
+    url = url.split('/');
+    if(url[part] == undefined || url[part] == '') return false;
+    return url[part];
+}
+
 
 function setInpError(e,text){
     $(e).addClass('is-error').after('<p class="form-input-hint inpError">'+text+'</p>');

@@ -1,4 +1,5 @@
 function getJSON(group,command,data,func){$.getJSON('/api/'+group+'/'+command+'/',data).done(func).fail(function(jqxhr,textStatus,error){console.log("Request Failed: "+error);});}
+function getURL(part){var url=window.location.pathname;if(part==undefined)return url;url=url.split('/');if(url[part]==undefined||url[part]=='')return false;return url[part];}
 function setInpError(e,text){$(e).addClass('is-error').after('<p class="form-input-hint inpError">'+text+'</p>');}
 function clearInpError(){$('.inpError').remove();$('.is-error').removeClass('is-error');}
 function bindEnterKey($keypressed,$to_click){$($keypressed).keypress(function(e){if(e.keyCode==13){$($to_click).click();}});}
