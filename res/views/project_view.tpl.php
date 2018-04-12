@@ -1,7 +1,7 @@
 <h3><?=$Project->Title?></h3>
 
 <div class="float-right">
-    <button class="btn btn-primary btn-sm" id="doAddTerm"><i class="icon-add"></i> <?=$L['projects:view:terms:add']?></button>
+    <a href="/terms/view/<?=$Project->ID?>/add" class="btn btn-primary btn-sm"><i class="icon-add"></i> <?=$L['projects:view:terms:add']?></a>
     <a class="btn btn-primary btn-sm" href="/terms/import/<?=$Project->ID?>/"><i class="icon-import"></i> <?=$L['projects:view:terms:import']?></a>
 </div>
 <h5><?=$L['projects:view:terms:header']?></h5>
