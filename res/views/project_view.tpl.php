@@ -1,5 +1,9 @@
 <h3><?=$Project->Title?></h3>
 
+<div class="float-right">
+    <button class="btn btn-primary btn-sm" id="doAddTerm"><i class="icon-add"></i> <?=$L['projects:view:terms:add']?></button>
+    <a class="btn btn-primary btn-sm" href="/terms/import/<?=$Project->ID?>/"><i class="icon-import"></i> <?=$L['projects:view:terms:import']?></a>
+</div>
 <h5><?=$L['projects:view:terms:header']?></h5>
 <div class="pad container pad-terms">
     <div class="columns">
@@ -9,7 +13,15 @@
         </div>
         <div class="column col-9 text-right">
             <a class="btn" href="/terms/view/<?=$Project->ID?>/"><i class="icon-edit"></i> <?=$L['projects:view:terms:edit']?></a>
-            <a class="btn btn-primary" href="/terms/import/<?=$Project->ID?>/"><i class="icon-import"></i> <?=$L['projects:view:terms:import']?></a>
         </div>
     </div>
+</div>
+<div class="mt"></div>
+
+<div class="float-right">
+    <button class="btn btn-primary btn-sm" id="doAddLanguage"><i class="icon-add"></i> <?=$L['projects:view:lang:add']?></button>
+</div>
+<h5><?=$L['projects:view:lang:header']?></h5>
+<div class="pad container pad-terms">
+    
 </div>

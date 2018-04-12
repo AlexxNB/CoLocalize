@@ -24,6 +24,10 @@ $(document).ready(function() {
     });
 
     clearContainer(function(){loadTerms()});
+
+    if(getURL(4) == 'add'){
+        doAddTerm();
+    }  
 });
 
 function loadTerms(){

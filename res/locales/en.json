@@ -96,7 +96,12 @@
                 "header":"Terms",
                 "terms":"terms",
                 "import":"Import",
-                "edit":"Edit"
+                "edit":"View list",
+                "add": "Add Term"
+            },
+            "lang":{
+                "header":"Languages",
+                "add":"Add Language"
             }
         }
     },
