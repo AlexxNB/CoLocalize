@@ -1,6 +1,6 @@
 <?php
 require_once("class_utils.php");
-class Language {
+class Locales {
     var $_defLang = 'en';
     var $_delimeter = ':';
     var $_path;

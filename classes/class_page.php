@@ -1,6 +1,6 @@
 <?php
 require_once("class_utils.php");
-require_once("class_language.php");
+require_once("class_locales.php");
 
 class Page {
     private $_ver;
@@ -17,8 +17,8 @@ class Page {
         $this->_ver = 1;
 
         $utils = new Utils();
-        $lang = new Language();
-        $this->L = $lang->GetLangVars();
+        $local = new Locales();
+        $this->L = $local->GetLangVars();
 
         
         $this->_pageview = $this->View('page');

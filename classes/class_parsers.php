@@ -1,5 +1,5 @@
 <?php 
-require_once("class_language.php");
+require_once("class_locales.php");
 
     class Parsers{
         public function __construct(){
@@ -44,8 +44,8 @@ require_once("class_language.php");
         }
 
         private function _fetchInfo(){
-            $lang = new Language($this->_path.'/locales/');
-            $L = $lang->GetLangVars();
+            $local = new Locales($this->_path.'/locales/');
+            $L = $local->GetLangVars();
             $this->Title = $L['title'];
             if(!file_exists($this->_path.'_info.php')) return false;
             require($this->_path.'_info.php');
