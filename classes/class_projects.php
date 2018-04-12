@@ -60,11 +60,13 @@ class Project{
     public $PublicLink;
     public $Creator;
     public $Terms;
+    public $Langs;
 
     public function __construct($projectid=false){
         if($projectid) {
             $this->ID = $projectid;
             $this->Terms = new Terms($this);
+            $this->Langs = new Languages($this);
         }
     }
 
@@ -294,6 +296,41 @@ class Terms{
     public function DeleteAllTerms(){
         $db = new DB();
         $db->Query("DELETE FROM :n WHERE :n=:d",'terms','projectid',$this->Project->ID);
+    }
+}
+
+class Languages{
+    var $Project;
+
+    public function __construct($Project){
+        $this->Project = $Project;
+    }
+
+    public function GetList(){
+        if(!$list = $this->_getLangArray()) return false;
+        $list = array();
+        foreach($ar as $code=>$data){
+            $Lang = new stdClass();
+            $Lang->name = $data['name'];
+            $Lang->native = $data['nativeName'];
+            $list[$code] = $Lang;
+        }
+        return $list;
+    }
+
+    public function Get($code){
+        if(!$list = $this->_getLangArray()) return false;
+        if(isset($list[$code])) return false;
+        $Lang = new stdClass();
+        $Lang->name = $list[$code]['name'];
+        $Lang->native = $list[$code]['nativeName'];
+        return $Lang;
+    }
+
+    private function _getLangArray(){
+        if(!$json = file_get_contents('res/languages/list.json',true)) return false;
+        if(!$ar = json_decode($json,true)) return false;
+        return $ar;
     }
 }
 ?>
