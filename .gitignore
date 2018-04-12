@@ -2,3 +2,5 @@
 .vscode
 .sass-cache
 _config.php
+res/css/
+res/js/
