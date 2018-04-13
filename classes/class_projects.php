@@ -309,21 +309,29 @@ class Languages{
     public function __construct($Project){
         $this->Project = $Project;
     }
-
-    public function GetList(){
-        if(!$list = $this->_getLangArray()) return false;
-        $list = array();
-        foreach($ar as $code=>$data){
-            $Lang = new stdClass();
-            $Lang->name = $data['name'];
-            $Lang->native = $data['nativeName'];
-            $list[$code] = $Lang;
+    
+    public function Info(){
+        $args = func_get_args();
+        if(!$listAr = $this->_getLangArray()) return false;
+        if(count($args)==0){
+            $list = array();
+            foreach($listAr as $code=>$data){
+                $list[$code] = $this->_makeLangObj($data);
+            }
+            return $list;
+        }else{
+            $list = array();
+            foreach($args as $code){
+                if(!isset($listAr[$code]))  continue;
+                $list[$code] = $this->_makeLangObj($listAr[$code]);
+            }
+            $num = count($list);
+            if($num == 0) return false;
+            if($num == 1) return array_shift($list);
+            return $list;
         }
-        return $list;
-    }
 
-    public function Get($code){
-        if(!$list = $this->_getLangArray()) return false;
+
         if(isset($list[$code])) return false;
         $Lang = new stdClass();
         $Lang->name = $list[$code]['name'];
@@ -335,6 +343,15 @@ class Languages{
         if(!$json = file_get_contents('res/languages/list.json',true)) return false;
         if(!$ar = json_decode($json,true)) return false;
         return $ar;
+    }
+
+    private function _makeLangObj($langDB){
+        if(is_array($langDB)) $dataDB = json_decode(json_encode($langDB), FALSE);
+        $Lang = new stdClass();
+        $Lang->name = $dataDB->name;
+        $Lang->native = $dataDB->nativeName;
+
+        return $Lang;
     }
 }
 ?>
