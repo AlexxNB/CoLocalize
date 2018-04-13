@@ -106,11 +106,15 @@ class Project{
         }
     }
 
-    public function CheckUserRole($User,$role,$role2=false,$role3=false){
+    public function CheckUserRole(){
+        $args = func_get_args();
+        if(count($args) < 2) return false;
+        $User = array_shift($args);
+        if(!$User instanceof User) return false;
         if(!$cRole = $this->GetUserRole($User)) return false;
-        if($cRole == $role) return true;
-        if($cRole == $role2) return true;
-        if($cRole == $role3) return true;
+        foreach($args as $role){
+            if($role == $cRole) return true;
+        }
         return false;
     }
 
