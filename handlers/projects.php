@@ -1,17 +1,17 @@
 <?php
 require_once('classes/class_restapi.php');
 require_once('classes/class_auth.php');
-require_once('classes/class_page.php');
+require_once('classes/class_locales.php');
 require_once('classes/class_projects.php');
 require_once('classes/class_utils.php');
 $api = new Restapi();
 $auth = new Auth();
-$page = new Page();
+$local = new Locales();
 $prj = new Projects();
 $utils = new Utils();
 
 $command = $api->getCommand();
-$L = $page->L;
+$L = $local->GetLangVars();
 
 //Get Public Link For The Project
 if($api->getCommand() == 'getPublicLink'){

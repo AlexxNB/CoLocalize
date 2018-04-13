@@ -1,13 +1,13 @@
 <?php
 require_once('classes/class_restapi.php');
 require_once('classes/class_auth.php');
-require_once('classes/class_page.php');
+require_once('classes/class_locales.php');
 $api = new Restapi();
 $auth = new Auth();
-$page = new Page();
+$local = new Locales();
 
 $command = $api->getCommand();
-$L = $page->L;
+$L = $local->GetLangVars();
 
 //User register
 if($api->getCommand() == 'signup'){

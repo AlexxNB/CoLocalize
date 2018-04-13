@@ -1,17 +1,17 @@
 <?php
 require_once('classes/class_restapi.php');
-require_once('classes/class_language.php');
+require_once('classes/class_locales.php');
 require_once('classes/class_parsers.php');
 require_once('classes/class_auth.php');
 require_once('classes/class_projects.php');
 $api = new Restapi();
 $auth = new Auth();
-$lang = new Language();
+$local = new Locales();
 $parsers = new Parsers();
 $prj = new Projects();
 
 $command = $api->getCommand();
-$L = $lang->GetLangVars();
+$L = $local->GetLangVars();
 
 //Import file
 if($api->getCommand() == 'importfile'){
