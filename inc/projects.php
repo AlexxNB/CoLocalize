@@ -57,6 +57,8 @@ if($action == 'view'){
     if(!$Project = $prj->GetProject($pid)) $page->Location('/projects/');
     if(!$Project->CanUserDo($User,'view_project')) $page->Location('/projects/');
 
+    $page->AddJSLink('/res/js/project_view.js');
+
     $page->Title = $Project->Title;
     $Form = $page->View('project_view');
     $Form->Project = $Project;

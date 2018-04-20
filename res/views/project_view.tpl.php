@@ -19,9 +19,27 @@
 <div class="mt"></div>
 
 <div class="float-right">
-    <button class="btn btn-primary btn-sm" id="doAddLanguage"><i class="icon-add"></i> <?=$L['projects:view:lang:add']?></button>
+    <button class="btn btn-primary btn-sm" id="showAddLanguage"><i class="icon-add"></i> <?=$L['projects:view:lang:add']?></button>
 </div>
 <h5><?=$L['projects:view:lang:header']?></h5>
-<div class="pad container pad-terms">
+<div class="pad container pad-langs">
     
+</div>
+
+<div class="modal modal-sm" id="modal-addlang">
+  <span class="modal-overlay modal-close" aria-label="Close"></span>
+  <div class="modal-container">
+    <div class="modal-header">
+        <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
+      <button class="btn btn-primary" id="doAddLanguage" data-err="<?=$L['terms:view:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+    </div>
+  </div>
 </div>
