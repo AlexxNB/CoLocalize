@@ -121,6 +121,7 @@ class Project{
     public function CanUserDo($User,$action){
         switch($action){
             case 'view_project':
+            case 'add_language':
                 if($this->CheckUserRole($User,'admin','contributor')) return true;
             break;
             
@@ -309,47 +310,98 @@ class Languages{
     public function __construct($Project){
         $this->Project = $Project;
     }
+
+    public function GetUnusedList(){
+        $list = $this->Info();
+        $used = $this->GetList();
+        foreach($used as $code=>$Lang){
+            if(array_key_exists($code,$list)) unset($list[$code]);
+        }
+        return $list;
+    }
+
+    public function GetList(){
+
+        $db = new DB();
+        $list = array();
+        $listDB = $db->GetArray("SELECT * FROM :n WHERE :n=:d",'languages','projectid',$this->Project->ID);
+        if($listDB) {
+            foreach($listDB as $line){
+                $list[$line->code] = $this->_makeLangObj($line);
+            }            
+        }
+        return $list;
+    }
+
+    public function IsInList($code){
+        $db = new DB();
+        if($db->GetRow("SELECT :n FROM :n WHERE :n=:d AND :n=:s",
+                        'id','languages',
+                        'projectid',$this->Project->ID,
+                        'code',$code
+                        )) return true;
+        return false;
+    }
     
     public function Info(){
         $args = func_get_args();
-        if(!$listAr = $this->_getLangArray()) return false;
+        if(!$listAr = $this->_getListArray()) return false;
         if(count($args)==0){
             $list = array();
             foreach($listAr as $code=>$data){
-                $list[$code] = $this->_makeLangObj($data);
+                $list[$code] = $this->_makeListLangObj($data);
             }
             return $list;
         }else{
             $list = array();
             foreach($args as $code){
                 if(!isset($listAr[$code]))  continue;
-                $list[$code] = $this->_makeLangObj($listAr[$code]);
+                $list[$code] = $this->_makeListLangObj($listAr[$code]);
             }
             $num = count($list);
             if($num == 0) return false;
             if($num == 1) return array_shift($list);
             return $list;
         }
-
-
-        if(isset($list[$code])) return false;
-        $Lang = new stdClass();
-        $Lang->name = $list[$code]['name'];
-        $Lang->native = $list[$code]['nativeName'];
-        return $Lang;
     }
 
-    private function _getLangArray(){
+    public function Add($code,$Lang,$User){
+        $db = new DB();
+        $prop = array(
+            'projectid'=>$this->Project->ID,
+            'code'=>$code,
+            'name'=>$Lang->name,
+            'native'=>$Lang->native,
+            'creator'=>$User->ID
+        );
+        $db->Query("INSERT INTO :n :i",'languages',$prop);
+        $prop["id"] = $db->LastID();
+        return $this->_makeLangObj($prop);
+    }
+
+    private function _getListArray(){
         if(!$json = file_get_contents('res/languages/list.json',true)) return false;
         if(!$ar = json_decode($json,true)) return false;
         return $ar;
     }
 
-    private function _makeLangObj($langDB){
+    private function _makeListLangObj($langDB){
         if(is_array($langDB)) $dataDB = json_decode(json_encode($langDB), FALSE);
         $Lang = new stdClass();
         $Lang->name = $dataDB->name;
         $Lang->native = $dataDB->nativeName;
+
+        return $Lang;
+    }
+
+    private function _makeLangObj($langDB){
+        if(is_array($langDB)) $dataDB = json_decode(json_encode($langDB), FALSE);
+        $Lang = new stdClass();
+        $Lang->id = $dataDB->id;
+        $Lang->code = $dataDB->code;
+        $Lang->name = $dataDB->name;
+        $Lang->native = $dataDB->native;
+        $Lang->creator = $dataDB->creator;
 
         return $Lang;
     }

@@ -33,13 +33,19 @@
         <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
     </div>
     <div class="modal-body">
-      <div class="content">
+        <div class="content">
 
-      </div>
+            <div class="form-group">
+                <select class="form-select" id="lang">
+                    <option value="" class="loading"><?=$L['langs:add:choose']?></option>
+                </select>
+            </div>
+            <div class="loading hide" id="listloading"></div>
+        </div>
     </div>
     <div class="modal-footer">
       <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
-      <button class="btn btn-primary" id="doAddLanguage" data-err="<?=$L['terms:view:msg:delete_err']?>"><i class="icon-ok"></i> <?=$L['yes']?></button>
+      <button class="btn btn-primary" id="doAddLanguage" data-pid="<?=$Project->ID?>"><i class="icon-add"></i> <?=$L['add']?></button>
     </div>
   </div>
 </div>

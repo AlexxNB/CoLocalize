@@ -145,6 +145,16 @@
             }
         }
     },
+    "langs":{
+        "add":{
+            "choose":"Choose new language...",
+            "msg":{
+                "no_lang":"Unavialable language code provided",
+                "in_list":"This language in the list already",
+                "add_success":"Language added"
+            }
+        }
+    },
     "yes":"Yes",
     "cancel":"Cancel",
     "close":"Close",
