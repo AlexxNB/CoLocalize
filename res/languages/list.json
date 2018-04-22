@@ -5,7 +5,7 @@
     },
     "ru" : {
         "name" : "Russian",
-        "nativeName" : "русский язык"
+        "nativeName" : "Русский язык"
     },
     "zh" : {
         "name" : "Chinese",
@@ -44,7 +44,7 @@
         "nativeName" : "Български език"
     },
     "ca" : {
-        "name" : "Catalan; Valencian",
+        "name" : "Catalan",
         "nativeName" : "Català"
     },
     "hr" : {
@@ -69,14 +69,14 @@
     },
     "fi" : {
         "name" : "Finnish",
-        "nativeName" : "Suomi, suomen kieli"
+        "nativeName" : "Suomen kieli"
     },
     "el" : {
-        "name" : "Greek, Modern",
+        "name" : "Greek",
         "nativeName" : "Ελληνικά"
     },
     "he" : {
-        "name" : "Hebrew (modern)",
+        "name" : "Hebrew",
         "nativeName" : "עברית"
     },
     "hi" : {
@@ -120,8 +120,8 @@
         "nativeName" : "Norsk"
     },
     "pa" : {
-        "name" : "Panjabi, Punjabi",
-        "nativeName" : "ਪੰਜਾਬੀ, پنجابی‎"
+        "name" : "Panjabi",
+        "nativeName" : "ਪੰਜਾਬੀ"
     },
     "pl" : {
         "name" : "Polish",
@@ -132,7 +132,7 @@
         "nativeName" : "Português"
     },
     "ro" : {
-        "name" : "Romanian, Moldavian, Moldovan",
+        "name" : "Romanian",
         "nativeName" : "Română"
     },
     "sr" : {
