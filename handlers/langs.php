@@ -40,5 +40,17 @@ if($api->getCommand() == 'add'){
 	$Project->Langs->Add($code,$Lang,$User);
 	$api->makeJSON($L['langs:add:msg:add_success']);
 }
+
+if($api->getCommand() == 'delete'){
+	$lid = $api->getParam('lid');
+	if(!preg_match('|^\d+$|',$lid))	$api->clientError($L['system_error']);
+
+	if(!$User = $auth->GetUser()) $api->serverError($L['auth_require']);
+	if(!$Project = $prj->GetProjectByLangId($lid)) $api->serverError($L['system_error']);
+	if(!$Project->CanUserDo($User,'delete_language',$lid)) $api->serverError($L['auth_error']);
+
+	$Project->Langs->Delete($lid);
+	$api->makeJSON($L['langs:delete:msg:delete_success']);
+}
 $api->clientError('Unknown command');
 ?>

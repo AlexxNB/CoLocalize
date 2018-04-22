@@ -81,7 +81,10 @@ function enable(id){
 }
 
 function locate(url){
-    document.location.href = url;	
+    if(url == undefined)
+        window.location.reload(true); 
+    else
+        document.location.href = url;	
 }
 
 function copyToClipboard(id) {

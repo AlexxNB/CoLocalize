@@ -101,7 +101,13 @@
             },
             "lang":{
                 "header":"Languages",
-                "add":"Add Language"
+                "add":"Add Language",
+                "delete": "Delete",
+                "no_langs":"There is no any language",
+                "can_add":"You can add new language into the project",
+                "msg":{
+                    "sure_delete":"Are you sure you want to delete this language WITH ALL done translations?"
+                }
             }
         }
     },
@@ -152,6 +158,11 @@
                 "no_lang":"Unavialable language code provided",
                 "in_list":"This language in the list already",
                 "add_success":"Language added"
+            }
+        },
+        "delete":{
+            "msg":{
+                "delete_success":"Language deleted"
             }
         }
     },

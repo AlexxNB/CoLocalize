@@ -1,4 +1,4 @@
-.project-tile{
+.project-tile, .lang-tile{
     transition: border-bottom-color 0.5s ease;
     border-bottom:1px solid #FFFFFF;
     margin-bottom:2em;
@@ -23,7 +23,10 @@
     .tile-action{
         margin-left:2em;
     }
+}
 
+
+.project-tile{
     .title{
         font: {
             size: 1.1em;

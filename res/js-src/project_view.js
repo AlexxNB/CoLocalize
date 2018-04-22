@@ -6,6 +6,11 @@ $(document).ready(function() {
 	$('#doAddLanguage').click(function(){
 		doAddLanguage();
 	});
+
+	$('.doDeleteLanguage').click(function(){
+		doDeleteLanguage($(this).data('lid'));
+	});
+	
 });
 
 function showAddLanguage(){
@@ -27,8 +32,7 @@ function doAddLanguage(){
 			showToast(resp.error,{type:'error'});
 			return false;
 		}
-		modal.removeClass('active');
-		showToast(resp.data,{type:'success'});
+		locate();
 	});
 }
 
@@ -52,3 +56,32 @@ function loadLangList(){
 	});
 }
 
+function doDeleteLanguage(lid){
+	var button = $('#confirmDelete');
+	var modal = $('#modal-delete');
+
+	modal.addClass('active');
+	
+	button.off();
+	button.click(function(){
+		startLoading(button);
+		getJSON('langs','delete',{lid:lid},function(resp) {
+			if(resp.status == 200){
+				removeFromList(lid);
+				showToast(resp.data,{type:'success'});
+			}else{
+				showToast(resp.error,{type:'error'});
+			}
+			stopLoading(button);
+			modal.removeClass('active');
+		});
+	});
+}
+
+function removeFromList(lid){
+	var tile = $("#lid-"+lid);
+	tile.slideUp(500,function(){
+		tile.remove();
+		if(!exists('.lang-tile')) locate();
+	});
+}

@@ -24,6 +24,12 @@ class Projects{
         return $this->_makeProjectObj($ProjectDB);
     }
 
+    public function GetProjectByLangId($lid){
+        $db = new DB();
+        if(!$pid = $db->GetCell("SELECT :n FROM :n WHERE :n=:d",'projectid','languages','id',$lid)) return false;
+        return $this->GetProject($pid);
+    }
+
     public function CreateProject($title,$descr,$Creator){
         $db = new DB();
         $prop = array(
@@ -118,7 +124,7 @@ class Project{
         return false;
     }
 
-    public function CanUserDo($User,$action){
+    public function CanUserDo($User,$action,$data=false){
         switch($action){
             case 'view_project':
             case 'add_language':
@@ -133,9 +139,15 @@ class Project{
                 if($this->CheckUserRole($User,'admin')) return true;
             break;
 
+            case 'delete_language':
+                if($this->CheckUserRole($User,'admin')) return true;
+                if($this->Langs->IsCreator($data,$User)) return true;
+            break;
+
             default: 
                 return false;
         }
+        return false;
     }
 
     public function DeleteProject(){
@@ -379,14 +391,27 @@ class Languages{
         return $this->_makeLangObj($prop);
     }
 
+    public function Delete($lid){
+        $db = new DB();
+        $db->Query("DELETE FROM :n WHERE :n=:d",'languages','id',$lid);
+    }
+
+    public function IsCreator($lid,$User){
+        $db = new DB();
+        if(!$uid = $db->GetCell("SELECT :n FROM :n WHERE :n=:d",'creator','languages','id',$lid)) return false;
+
+        if($User->ID == $uid) return true;
+        return false;
+    }
+
     private function _getListArray(){
         if(!$json = file_get_contents('res/languages/list.json',true)) return false;
         if(!$ar = json_decode($json,true)) return false;
         return $ar;
     }
 
-    private function _makeListLangObj($langDB){
-        if(is_array($langDB)) $dataDB = json_decode(json_encode($langDB), FALSE);
+    private function _makeListLangObj($dataDB){
+        if(is_array($dataDB)) $dataDB = json_decode(json_encode($dataDB), FALSE);
         $Lang = new stdClass();
         $Lang->name = $dataDB->name;
         $Lang->native = $dataDB->nativeName;
@@ -394,10 +419,10 @@ class Languages{
         return $Lang;
     }
 
-    private function _makeLangObj($langDB){
-        if(is_array($langDB)) $dataDB = json_decode(json_encode($langDB), FALSE);
+    private function _makeLangObj($dataDB){
+        if(is_array($dataDB)) $dataDB = json_decode(json_encode($dataDB), FALSE);
         $Lang = new stdClass();
-        $Lang->id = $dataDB->id;
+        $Lang->ID = $dataDB->id;
         $Lang->code = $dataDB->code;
         $Lang->name = $dataDB->name;
         $Lang->native = $dataDB->native;

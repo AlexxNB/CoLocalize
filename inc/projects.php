@@ -60,9 +60,10 @@ if($action == 'view'){
     $page->AddJSLink('/res/js/project_view.js');
 
     $page->Title = $Project->Title;
-    $Form = $page->View('project_view');
-    $Form->Project = $Project;
-    $Form->Termsnum = $Project->Terms->Num();
-    $page->Content = $Form->HTML();
+    $View = $page->View('project_view');
+    $View->Project = $Project;
+    $View->Termsnum = $Project->Terms->Num();
+    $View->Langs = $Project->Langs->GetList();
+    $page->Content = $View->HTML();
     $page->makePage();
 }

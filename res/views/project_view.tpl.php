@@ -22,9 +22,38 @@
     <button class="btn btn-primary btn-sm" id="showAddLanguage"><i class="icon-add"></i> <?=$L['projects:view:lang:add']?></button>
 </div>
 <h5><?=$L['projects:view:lang:header']?></h5>
-<div class="pad container pad-langs">
-    
+<div class="mt"></div>
+<?php if(count($Langs) == 0):?>
+
+<div class="empty">
+  <div class="empty-icon">
+    <i class="icon-folder"></i>
+  </div>
+  <p class="empty-title h5"><?=$L['projects:view:lang:no_langs']?></p>
+  <p class="empty-subtitle"><?=$L['projects:view:lang:can_add']?></p>
 </div>
+
+
+<?php else: ?>
+
+
+<?php foreach($Langs as $Lang):?>
+<div class="tile lang-tile" id="lid-<?=$Lang->ID?>">
+    <div class="tile-icon">
+        <div class="progress-icon">100%</div>
+    </div>
+    <div class="tile-content">
+    <p class="name"><a href="/projects/translate/<?=$Lang->ID?>/"><?=$Lang->name?></a></p>
+    <p class="native"><?=$Lang->native?></p>
+    </div>
+    <div class="tile-action">
+    <button class="btn doDeleteLanguage" data-lid="<?=$Lang->ID?>"><i class="icon-delete"></i> <?=$L['projects:view:lang:delete']?></button>
+    </div>
+</div>
+<?php endforeach;?>
+
+
+<?php endif;?>
 
 <div class="modal modal-sm" id="modal-addlang">
   <span class="modal-overlay modal-close" aria-label="Close"></span>
@@ -46,6 +75,24 @@
     <div class="modal-footer">
       <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
       <button class="btn btn-primary" id="doAddLanguage" data-pid="<?=$Project->ID?>"><i class="icon-add"></i> <?=$L['add']?></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-sm" id="modal-delete">
+  <span class="modal-overlay modal-close" aria-label="Close"></span>
+  <div class="modal-container">
+    <div class="modal-header">
+        <span class="btn btn-clear float-right modal-close" aria-label="Close"></span>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <?=$L['projects:view:lang:msg:sure_delete']?>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn modal-close"><i class="icon-close"></i> <?=$L['cancel']?></button>
+      <button class="btn btn-primary" id="confirmDelete"><i class="icon-ok"></i> <?=$L['yes']?></button>
     </div>
   </div>
 </div>
