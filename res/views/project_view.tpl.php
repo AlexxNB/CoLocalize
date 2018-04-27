@@ -43,8 +43,8 @@
         <div class="progress-icon">100%</div>
     </div>
     <div class="tile-content">
-    <p class="name"><a href="/projects/translate/<?=$Lang->ID?>/"><?=$Lang->name?></a></p>
-    <p class="native"><?=$Lang->native?></p>
+    <p class="name"><a href="/translate/list/<?=$Lang->Orign?>/<?=$Lang->Code?>/<?=$Lang->ID?>/"><?=$Lang->Name?></a></p>
+    <p class="native"><?=$Lang->Native?></p>
     </div>
     <div class="tile-action">
     <button class="btn doDeleteLanguage" data-lid="<?=$Lang->ID?>"><i class="icon-delete"></i> <?=$L['projects:view:lang:delete']?></button>

@@ -140,6 +140,7 @@ class Project{
             break;
 
             case 'delete_language':
+            case 'translate':
                 if($this->CheckUserRole($User,'admin')) return true;
                 if($this->Langs->IsCreator($data,$User)) return true;
             break;
@@ -345,6 +346,20 @@ class Languages{
         return $list;
     }
 
+    public function Get($lang){
+        $db = new DB();
+        $Part = $db->Part();
+        if(preg_match('|^\d+$|',$lang))
+            $Part->Add(":n=:d",'id',$lang);
+        elseif(preg_match('|^[a-zA-Z]+$|',$lang))
+            $Part->Add(":n=:d AND :n=:s",'projectid',$this->Project->ID,'code',$lang);
+        else
+            return false;
+
+        if(!$langDB = $db->GetRow("SELECT * FROM :n WHERE :p",'languages',$Part)) return false;
+        return $this->_makeLangObj($langDB);
+    }
+
     public function IsInList($code){
         $db = new DB();
         if($db->GetRow("SELECT :n FROM :n WHERE :n=:d AND :n=:s",
@@ -384,6 +399,7 @@ class Languages{
             'code'=>$code,
             'name'=>$Lang->name,
             'native'=>$Lang->native,
+            'orign'=>'en',
             'creator'=>$User->ID
         );
         $db->Query("INSERT INTO :n :i",'languages',$prop);
@@ -421,14 +437,37 @@ class Languages{
 
     private function _makeLangObj($dataDB){
         if(is_array($dataDB)) $dataDB = json_decode(json_encode($dataDB), FALSE);
-        $Lang = new stdClass();
+        $Lang = new Lang($this->Project);
         $Lang->ID = $dataDB->id;
-        $Lang->code = $dataDB->code;
-        $Lang->name = $dataDB->name;
-        $Lang->native = $dataDB->native;
-        $Lang->creator = $dataDB->creator;
+        $Lang->Code = $dataDB->code;
+        $Lang->Name = $dataDB->name;
+        $Lang->Native = $dataDB->native;
+        $Lang->Creator = $dataDB->creator;
+        $Lang->Orign = $dataDB->orign;
 
         return $Lang;
+    }
+}
+
+class Lang{
+    public $ID;
+    public $Code;
+    public $Name;
+    public $Native;
+    public $Orign;
+    public $Creator;
+    public $Project;
+
+    public function __construct($Project){
+        $this->Project = $Project;
+    }
+
+    public function SetOrign($code){
+        $db = new DB();
+        if(!$Project->Langs->IsInList($code)) return false;
+
+        $prop = array('orign'=>$code);
+        $db->Query("UPDATE :n :u WHERE :n=:d",'languages',$prop,'id',$this->ID);
     }
 }
 ?>

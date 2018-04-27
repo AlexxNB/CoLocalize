@@ -166,6 +166,15 @@
             }
         }
     },
+    "translate":{
+        "list":{
+            "title":"Translation",
+            "header":"Translation",
+            "search":"Search term...",
+            "import":"Import",
+            "export":"Export"
+        }
+    },
     "yes":"Yes",
     "cancel":"Cancel",
     "close":"Close",
