@@ -1,0 +1,62 @@
+/**
+*   Tiny customization of Spectre fraework
+*/
+
+.menu-item [class^="icon-"], .menu-item [class*=" icon-"]{
+    color:$gray-color;
+}
+
+.empty-icon [class^="icon-"], .empty-icon [class*=" icon-"]{
+    font-size:3em;
+}
+
+.mt{
+    margin-top:2em;
+}
+
+.mr{
+    margin-right:2em;
+}
+
+.mb{
+    margin-bottom:2em;
+}
+
+.nu:hover{
+    text-decoration:none;
+    color:$gray-color;
+}
+
+.hide{
+    display:none;
+}
+
+.toast-container{
+    position:fixed;
+    z-index: 10000;
+    bottom:0px;
+    width:100%;
+    display:flex;
+    flex-direction:column-reverse;
+    align-items: center;
+}
+
+.toast{
+    width:auto;
+    margin-bottom: 10px;
+}
+
+.btn{
+    transition: background 0.3s ease;
+}
+
+a{
+    transition: color 0.3s ease;
+}
+
+
+h1,h2,h3,h4,h5{
+    span{
+        color: $gray-color;
+    }
+}

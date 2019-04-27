@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'colocolize';
+  src:  url('fonts/colocolize.eot?a0b9ld');
+  src:  url('fonts/colocolize.eot?a0b9ld#iefix') format('embedded-opentype'),
+    url('fonts/colocolize.ttf?a0b9ld') format('truetype'),
+    url('fonts/colocolize.woff?a0b9ld') format('woff'),
+    url('fonts/colocolize.svg?a0b9ld#colocolize') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'colocolize' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-account:before {
+  content: "\f004";
+}
+.icon-ok:before {
+  content: "\f12c";
+}
+.icon-down:before {
+  content: "\f140";
+}
+.icon-close:before {
+  content: "\f156";
+}
+.icon-copy:before {
+  content: "\f18f";
+}
+.icon-delete:before {
+  content: "\f5e8";
+}
+.icon-emo-P:before {
+  content: "\f1f9";
+}
+.icon-export:before {
+  content: "\f21d";
+}
+.icon-import:before {
+  content: "\f220";
+}
+.icon-folder:before {
+  content: "\f256";
+}
+.icon-info:before {
+  content: "\f2fd";
+}
+.icon-edit:before {
+  content: "\f64f";
+}
+.icon-logout:before {
+  content: "\f343";
+}
+.icon-search:before {
+  content: "\f349";
+}
+.icon-add:before {
+  content: "\f415";
+}
+.icon-upload:before {
+  content: "\f552";
+}
